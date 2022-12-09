@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/StoreAPI/store.db
