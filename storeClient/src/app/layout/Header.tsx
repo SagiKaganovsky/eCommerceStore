@@ -5,6 +5,9 @@ import {
   CssBaseline,
   Fab,
   Fade,
+  FormControlLabel,
+  FormGroup,
+  Switch,
   Toolbar,
   Typography,
   useScrollTrigger,
@@ -18,6 +21,8 @@ interface Props {
    */
   window?: () => Window;
   children: React.ReactElement;
+  darkMode: boolean;
+  handleDarkModeChange: () => void;
 }
 const Header: React.FC<Props> = (props) => {
   function ScrollTop(props: Props) {
@@ -63,6 +68,21 @@ const Header: React.FC<Props> = (props) => {
           <Typography variant="h6" component="div">
             RE-STORE
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={props.darkMode}
+                    onChange={props.handleDarkModeChange}
+                    aria-label="login switch"
+                  />
+                }
+                label={props.darkMode ? "Dark" : "Light"}
+              />
+            </FormGroup>
+          </Box>
         </Toolbar>
       </AppBar>
       <Toolbar id="back-to-top-anchor" />
