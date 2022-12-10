@@ -1,16 +1,37 @@
-import { Avatar, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 import { Product } from "../../app/models/product";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
-    <ListItem key={product.id}>
-      <ListItemAvatar>
-        <Avatar alt={product.name} src={product.pictureUrl} />
-      </ListItemAvatar>
-      <ListItemText>
-        {product.name} - {product.price}
-      </ListItemText>
-    </ListItem>
+    <Card sx={{ maxWidth: 250 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          image={product.pictureUrl}
+          alt={product.name}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {product.name} - {product.price}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {product.brand} / {product.type}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <Button size="small">Add to cart</Button>
+        <Button size="small">View</Button>
+      </CardActions>
+    </Card>
   );
 };
 

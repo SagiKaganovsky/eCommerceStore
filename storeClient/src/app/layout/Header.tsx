@@ -61,13 +61,13 @@ const Header: React.FC<Props> = (props) => {
       <AppBar>
         <Toolbar>
           <Typography variant="h6" component="div">
-            Scroll to see button
+            RE-STORE
           </Typography>
         </Toolbar>
       </AppBar>
       <Toolbar id="back-to-top-anchor" />
       <Container>
-        <Box sx={{ my: 2 }}>{props.children}</Box>
+        <Box sx={{ my: 4, width: "100%" }}>{props.children}</Box>
       </Container>
       <ScrollTop {...props}>
         <Fab size="small" aria-label="scroll back to top">
