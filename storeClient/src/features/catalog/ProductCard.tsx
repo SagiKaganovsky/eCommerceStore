@@ -39,7 +39,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       </CardActionArea>
       <CardActions>
         <Button size="small">Add to cart</Button>
-        <Button size="small">View</Button>
       </CardActions>
     </Card>
   );

@@ -1,18 +1,29 @@
 import {
   AppBar,
   Box,
+  Button,
   Container,
   CssBaseline,
   Fab,
   Fade,
   FormControlLabel,
   FormGroup,
+  Menu,
+  MenuItem,
   Switch,
   Toolbar,
   Typography,
   useScrollTrigger,
 } from "@mui/material";
 import { KeyboardArrowUp } from "@mui/icons-material";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
+const pages = [
+  { title: "Home", path: "/" },
+  { title: "Catalog", path: "/catalog" },
+  { title: "About", path: "/about" },
+  { title: "Contact", path: "/contact" },
+];
 
 interface Props {
   /**
@@ -69,6 +80,16 @@ const Header: React.FC<Props> = (props) => {
             RE-STORE
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((page) => (
+              <Button
+                key={page.title}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                <NavLink to={page.path}>{page.title}</NavLink>
+              </Button>
+            ))}
+          </Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <FormGroup>
               <FormControlLabel
@@ -76,7 +97,7 @@ const Header: React.FC<Props> = (props) => {
                   <Switch
                     checked={props.darkMode}
                     onChange={props.handleDarkModeChange}
-                    aria-label="login switch"
+                    aria-label="Dark Light mode switch"
                   />
                 }
                 label={props.darkMode ? "Dark" : "Light"}
