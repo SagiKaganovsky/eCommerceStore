@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
-import Product from "./models/product";
+import { Product } from "../models/product";
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
+  const getProducts =   useCallback(async () => {
+    const response = await fetch("http://restore.local/products");
+    if (response.ok) {
+      const data = await response.json();
+      setProducts(data);
+    }
+  },[]);
 
   useEffect(() => {
-    const getProducts = async () => {
-      const response = await fetch("http://restore.local/products");
-      if (response.ok) {
-        const data = await response.json();
-        setProducts(data);
-      }
-    };
     getProducts();
   }, []);
 
