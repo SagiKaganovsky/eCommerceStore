@@ -1,27 +1,22 @@
-import {
-  Avatar,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { Product } from "../../app/models/product";
+import ProductList from "./ProductList";
 
-const Catalog: React.FC<{ products: Product[] }> = (props) => {
-  return (
-    <List>
-      {props.products.map((product: Product) => (
-        <ListItem key={product.id}>
-          <ListItemAvatar>
-            <Avatar alt={product.name} src={product.pictureUrl} />
-          </ListItemAvatar>
-          <ListItemText>
-            {product.name} - {product.price}
-          </ListItemText>
-        </ListItem>
-      ))}
-    </List>
-  );
+const Catalog: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  
+  const getProducts = useCallback(async () => {
+    const response = await fetch("http://restore.local/products");
+    if (response.ok) {
+      const data = await response.json();
+      setProducts(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+  return <ProductList products={products} />;
 };
 
 export default Catalog;
