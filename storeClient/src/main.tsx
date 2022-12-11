@@ -11,7 +11,11 @@ import About from "./features/about/About";
 import Catalog, { loader as catalogLoader } from "./features/catalog/Catalog";
 import HomePage from "./features/home/HomePage";
 import Contact from "./features/contact/Contact";
-import ProductDetails from "./features/catalog/ProductDetails";
+import ProductDetails, {
+  loader as productLoader,
+} from "./features/catalog/ProductDetails";
+import Login from "./features/login/Login";
+import Register from "./features/register/Register";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +34,7 @@ const router = createBrowserRouter([
       {
         path: "/catalog/:id",
         element: <ProductDetails />,
+        loader: productLoader,
       },
       {
         path: "/about",
@@ -38,6 +43,14 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
       },
     ],
   },

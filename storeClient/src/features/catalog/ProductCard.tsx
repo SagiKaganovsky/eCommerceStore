@@ -8,12 +8,14 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { Product } from "../../app/models/product";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+  const navigate = useNavigate();
   return (
     <Card sx={{ maxWidth: 250 }}>
-      <CardActionArea>
+      <CardActionArea onClick={() => navigate(`/catalog/${product.id}`)}>
         <CardHeader
           title={product.name}
           titleTypographyProps={{

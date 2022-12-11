@@ -8,21 +8,22 @@ import {
   Fade,
   FormControlLabel,
   FormGroup,
-  Menu,
-  MenuItem,
+  IconButton,
   Switch,
   Toolbar,
   Typography,
+  Badge,
   useScrollTrigger,
 } from "@mui/material";
-import { KeyboardArrowUp } from "@mui/icons-material";
+import { KeyboardArrowUp, ShoppingCart } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 const pages = [
   { title: "Home", path: "/" },
   { title: "Catalog", path: "/catalog" },
   { title: "About", path: "/about" },
   { title: "Contact", path: "/contact" },
+  { title: "Login", path: "/login" },
+  { title: "Register", path: "/register" }
 ];
 
 interface Props {
@@ -76,21 +77,40 @@ const Header: React.FC<Props> = (props) => {
       <CssBaseline />
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" component="div">
+          <Typography
+            variant="h6"
+            component={NavLink}
+            to="/"
+            sx={{ color: "inherit" }}
+          >
             RE-STORE
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ display: "flex" }}>
             {pages.map((page) => (
               <Button
                 key={page.title}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                <NavLink to={page.path}>{page.title}</NavLink>
+                <NavLink
+                  to={page.path}
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  {page.title}
+                </NavLink>
               </Button>
             ))}
           </Box>
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box>
+            <IconButton sx={{ color: "inherit" }}>
+              <Badge badgeContent={3} max={100} color="secondary">
+                <ShoppingCart color="action" />
+              </Badge>
+            </IconButton>
+          </Box>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box>
             <FormGroup>
               <FormControlLabel
                 control={
