@@ -32,7 +32,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            ${(product.price / 10).toFixed(2)}
+            ${(product.price / 100).toFixed(2)}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {product.brand} / {product.type}

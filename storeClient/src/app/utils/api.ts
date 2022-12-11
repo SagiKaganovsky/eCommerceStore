@@ -1,12 +1,10 @@
+import axios from "axios";
+
 export const getCategory = async () => {
-  const response = await fetch("http://restore.local/products");
-  if (response.ok) {
-    return await response.json();
-  }
+  const response = await axios.get("http://restore.local/products");
+  return response.data;
 };
 export const getProductById = async (id: string) => {
-  const response = await fetch(`http://restore.local/products/${id}`);
-  if (response.ok) {
-    return await response.json();
-  }
+  const response = await axios.get(`http://restore.local/products/${id}`);
+  return response.data;
 };
