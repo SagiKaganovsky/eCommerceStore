@@ -6,9 +6,7 @@ using StoreAPI.Entities;
 
 namespace StoreAPI.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly StoreContext _storeContext;
 

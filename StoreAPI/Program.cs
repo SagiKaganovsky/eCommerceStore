@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StoreAPI.Data;
+using StoreAPI.Middleware;
 
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 var DefaultConnectionString = "DefaultConnection";
@@ -38,10 +39,10 @@ catch (Exception ex)
     logger.LogError(ex, "Prolem Migrate Db");
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
