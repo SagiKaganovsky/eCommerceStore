@@ -8,7 +8,7 @@ import "@fontsource/roboto/700.css";
 
 import "./index.css";
 import About from "./features/about/About";
-import Catalog from "./features/catalog/Catalog";
+import Catalog, { loader as catalogLoader } from "./features/catalog/Catalog";
 import HomePage from "./features/home/HomePage";
 import Contact from "./features/contact/Contact";
 import ProductDetails from "./features/catalog/ProductDetails";
@@ -25,6 +25,7 @@ const router = createBrowserRouter([
       {
         path: "/catalog",
         element: <Catalog />,
+        loader: catalogLoader,
       },
       {
         path: "/catalog/:id",
