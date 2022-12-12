@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoreAPI.Data;
+using StoreAPI.DTO;
 using StoreAPI.Entities;
 
 namespace StoreAPI.Controllers
@@ -9,20 +11,22 @@ namespace StoreAPI.Controllers
     public class BasketController : BaseApiController
     {
         private readonly StoreContext _storeContext;
+        private readonly IMapper _mapper;
 
-        public BasketController(StoreContext storeContext)
+        public BasketController(StoreContext storeContext, IMapper mapper)
         {
             _storeContext = storeContext;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<Basket>> GetBasket()
+        public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
 
             if (basket == null) { return NotFound(); }
 
-            return Ok(basket);
+            return Ok(_mapper.Map<BasketDto>(basket));
         }
 
         [HttpPost]

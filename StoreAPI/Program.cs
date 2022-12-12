@@ -24,10 +24,8 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins("http://localhost:5173");
                       });
 });
-builder.Services.AddControllersWithViews()
-    .AddJsonOptions(options =>
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
-);
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 // Seed Db
