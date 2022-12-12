@@ -1,26 +1,32 @@
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./app/layout/App";
+import App from "./app/App";
+import { loader as catalogLoader } from "./features/catalog/Catalog";
+import Contact from "./features/contact/Contact";
+import { loader as productLoader } from "./features/catalog/ProductDetails";
+import AppBoundary from "./features/error/AppBoundary";
+
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import "./index.css";
-import About from "./features/about/About";
-import Catalog, { loader as catalogLoader } from "./features/catalog/Catalog";
-import HomePage from "./features/home/HomePage";
-import Contact from "./features/contact/Contact";
-import ProductDetails, {
-  loader as productLoader,
-} from "./features/catalog/ProductDetails";
-import Login from "./features/login/Login";
-import Register from "./features/register/Register";
 
+const About = React.lazy(() => import("./features/about/About"));
+const HomePage = React.lazy(() => import("./features/home/HomePage"));
+const Catalog = React.lazy(() => import("./features/catalog/Catalog"));
+const ProductDetails = React.lazy(
+  () => import("./features/catalog/ProductDetails")
+);
+const Login = React.lazy(() => import("./features/login/Login"));
+const Register = React.lazy(() => import("./features/register/Register"));
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <AppBoundary />,
     children: [
       {
         path: "/",

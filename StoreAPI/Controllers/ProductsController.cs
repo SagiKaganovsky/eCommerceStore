@@ -25,7 +25,8 @@ namespace StoreAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetAsync(int id)
         {
-            var product =  await _storeContext.Products.SingleOrDefaultAsync(p => p.Id == id);
+            var product = await _storeContext.Products.FindAsync(id);
+            if (product == null) { return NotFound(); }
             return Ok(product);
         }
     }

@@ -1,8 +1,9 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
-import Catalog from "../../features/catalog/Catalog";
-import Header from "./Header";
+import Catalog from "../features/catalog/Catalog";
+import Loader from "../features/loader/Loader";
+import Header from "./layout/Header";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -18,7 +19,9 @@ function App() {
         darkMode={darkMode}
         handleDarkModeChange={() => setDarkMode((darkMode) => !darkMode)}
       >
-        <Outlet />
+        <Suspense fallback={<Loader />}>
+          <Outlet />
+        </Suspense>
       </Header>
     </ThemeProvider>
   );
