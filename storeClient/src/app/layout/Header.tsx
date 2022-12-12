@@ -86,19 +86,15 @@ const Header: React.FC<Props> = (props) => {
             RE-STORE
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", justifyContent: 'space-between', width:'25rem' }}>
             {pages.map((page) => (
-              <Button
-                key={page.title}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
                 <NavLink
+                 key={page.title}
                   to={page.path}
                   style={{ color: "white", textDecoration: "none" }}
                 >
                   {page.title}
                 </NavLink>
-              </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 1 }} />

@@ -1,4 +1,4 @@
-a.active + span {
+a.active {
   background: cadetblue;
   z-index: -1;
 }
