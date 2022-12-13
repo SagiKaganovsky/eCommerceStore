@@ -19,7 +19,7 @@ namespace StoreAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name ="GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
@@ -30,7 +30,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddItemToBasket(int productId, int quantiry)
+        public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantiry)
         {
             var basket = await RetrieveBasket();
             if (basket == null)
@@ -49,16 +49,23 @@ namespace StoreAPI.Controllers
             {
                 return BadRequest(new ProblemDetails { Title = "Problem saving item to basket" });
             }
-            return Ok();
+            return CreatedAtRoute("GetBasket", _mapper.Map<BasketDto>(basket));
         }
-
-
-
         [HttpDelete]
         public async Task<ActionResult> RemoveItemToBasket(int productId, int quantiry)
         {
+            var basket = await RetrieveBasket();
+            if (basket == null) { return NotFound(); }
+
+            basket.RemoveItem(productId, quantiry);
+            var result = await _storeContext.SaveChangesAsync() > 0;
+            if (!result)
+            {
+                return BadRequest(new ProblemDetails { Title = "Problem removing item from the basket" });
+            }
             return Ok();
         }
+
         private async Task<Basket> RetrieveBasket()
         {
             return await _storeContext.Baskets
