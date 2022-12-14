@@ -1,3 +1,4 @@
+// import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Card,
@@ -8,11 +9,22 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
+import { Bars } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../app/models/product";
+import api from "../../app/utils/api";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const addItemHandler = async () => {
+    setLoading(true);
+    await api.Basket.addItem(product.id);
+    setLoading(false);
+  };
+
   return (
     <Card sx={{ maxWidth: 250 }}>
       <CardActionArea onClick={() => navigate(`/catalog/${product.id}`)}>
@@ -40,7 +52,23 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small">Add to cart</Button>
+        {
+          <Button size="small" onClick={addItemHandler}>
+            {!loading ? (
+              "Add to cart"
+            ) : (
+              <Bars
+                height="80"
+                width="80"
+                color="#4fa94d"
+                ariaLabel="bars-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            )}
+          </Button>
+        }
       </CardActions>
     </Card>
   );

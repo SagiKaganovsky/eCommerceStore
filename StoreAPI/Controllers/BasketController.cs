@@ -19,7 +19,7 @@ namespace StoreAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet(Name ="GetBasket")]
+        [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
@@ -30,7 +30,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantiry)
+        public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
         {
             var basket = await RetrieveBasket();
             if (basket == null)
@@ -42,7 +42,7 @@ namespace StoreAPI.Controllers
             {
                 return NotFound();
             }
-            basket.AddItem(product, quantiry);
+            basket.AddItem(product, quantity);
 
             var result = await _storeContext.SaveChangesAsync() > 0;
             if (!result)
@@ -66,8 +66,12 @@ namespace StoreAPI.Controllers
             return Ok();
         }
 
-        private async Task<Basket> RetrieveBasket()
+        private async Task<Basket?> RetrieveBasket()
         {
+            if (Request.Cookies["buyerId"] == null)
+            {
+                return null;
+            }
             return await _storeContext.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
@@ -76,7 +80,13 @@ namespace StoreAPI.Controllers
         private Basket CreateBasket()
         {
             var buyerId = Guid.NewGuid().ToString();
-            var cookieOptions = new CookieOptions { IsEssential = true, Expires = DateTime.Now.AddDays(30) };
+            var cookieOptions = new CookieOptions
+            {
+                IsEssential = true,
+                Expires = DateTime.Now.AddDays(30),
+                SameSite = SameSiteMode.None,
+                Secure = true
+            };
             Response.Cookies.Append("buyerId", buyerId, cookieOptions);
             var basket = new Basket { BuyerId = buyerId };
             _storeContext.Baskets.Add(basket);

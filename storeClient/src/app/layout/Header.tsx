@@ -1,7 +1,6 @@
 import {
   AppBar,
   Box,
-  Button,
   Container,
   CssBaseline,
   Fab,
@@ -16,14 +15,14 @@ import {
   useScrollTrigger,
 } from "@mui/material";
 import { KeyboardArrowUp, ShoppingCart } from "@mui/icons-material";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 const pages = [
   { title: "Home", path: "/" },
   { title: "Catalog", path: "/catalog" },
   { title: "About", path: "/about" },
   { title: "Contact", path: "/contact" },
   { title: "Login", path: "/login" },
-  { title: "Register", path: "/register" }
+  { title: "Register", path: "/register" },
 ];
 
 interface Props {
@@ -86,24 +85,32 @@ const Header: React.FC<Props> = (props) => {
             RE-STORE
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: "flex", justifyContent: 'space-between', width:'25rem' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "25rem",
+            }}
+          >
             {pages.map((page) => (
-                <NavLink
-                 key={page.title}
-                  to={page.path}
-                  style={{ color: "white", textDecoration: "none" }}
-                >
-                  {page.title}
-                </NavLink>
+              <NavLink
+                key={page.title}
+                to={page.path}
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                {page.title}
+              </NavLink>
             ))}
           </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box>
-            <IconButton sx={{ color: "inherit" }}>
-              <Badge badgeContent={3} max={100} color="secondary">
-                <ShoppingCart color="action" />
-              </Badge>
-            </IconButton>
+            <Link to="/basket">
+              <IconButton sx={{ color: "inherit" }}>
+                <Badge badgeContent={3} max={100} color="secondary">
+                  <ShoppingCart color="action" />
+                </Badge>
+              </IconButton>
+            </Link>
           </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box>

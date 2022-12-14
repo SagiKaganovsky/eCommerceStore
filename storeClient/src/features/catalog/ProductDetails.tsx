@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useLoaderData } from "react-router-dom";
 import { Product } from "../../app/models/product";
-import { getProductById } from "../../app/utils/api";
+import api from "../../app/utils/api";
 
 const ProductDetails: React.FC = () => {
   const product = useLoaderData() as Product;
@@ -67,5 +67,5 @@ export default ProductDetails;
 
 export const loader = ({ params }: any) => {
   const { id } = params;
-  return getProductById(id);
+  return api.Catalog.getProductById(id);
 };
