@@ -10,10 +10,13 @@ import {
   IconButton,
   Box,
 } from "@mui/material/";
+import { TailSpin } from "react-loader-spinner";
 import { BasketItem } from "../../app/models/basket";
+import { Status } from "../../app/models/status";
 
 interface Props {
   items: BasketItem[];
+  status: Status;
   onRemoveItem: (productId: number, quantity: number) => void;
   onAddItem: (productId: number) => void;
 }
@@ -32,10 +35,27 @@ const subtotal = (items: readonly BasketItem[]) => {
     .reduce((sum, i) => sum + i, 0);
 };
 
-const BasketTable: React.FC<Props> = ({ items, onRemoveItem, onAddItem }) => {
+const BasketTable: React.FC<Props> = ({
+  items,
+  status,
+  onRemoveItem,
+  onAddItem,
+}) => {
   const invoiceSubtotal = subtotal(items);
   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
   const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+  const Spinner = () => (
+    <TailSpin
+      height="21"
+      width="21"
+      color="red"
+      ariaLabel="tail-spin-loading"
+      radius="1"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+    />
+  );
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="basket table">
@@ -69,19 +89,33 @@ const BasketTable: React.FC<Props> = ({ items, onRemoveItem, onAddItem }) => {
                 </Box>
               </TableCell>
               <TableCell align="center">
-                <IconButton
-                  color="error"
-                  onClick={() => onRemoveItem(item.productId, 1)}
-                >
-                  <Remove />
-                </IconButton>
-                {item.quantity}
-                <IconButton
-                  color="error"
-                  onClick={() => onAddItem(item.productId)}
-                >
-                  <Add />
-                </IconButton>
+                <Box>
+                  <IconButton
+                    color="error"
+                    onClick={() => onRemoveItem(item.productId, 1)}
+                  >
+                    {status.loading &&
+                    status.productId === item.productId &&
+                    status.action === "remove" ? (
+                      <Spinner />
+                    ) : (
+                      <Remove />
+                    )}
+                  </IconButton>
+                  {item.quantity}
+                  <IconButton
+                    color="error"
+                    onClick={() => onAddItem(item.productId)}
+                  >
+                    {status.loading &&
+                    status.productId === item.productId &&
+                    status.action === "add" ? (
+                      <Spinner />
+                    ) : (
+                      <Add />
+                    )}
+                  </IconButton>
+                </Box>
               </TableCell>
               <TableCell align="right">{ccyFormat(item.price)}</TableCell>
               <TableCell align="right">

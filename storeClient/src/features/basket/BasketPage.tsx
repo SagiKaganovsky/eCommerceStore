@@ -16,9 +16,10 @@ const BasketPage = () => {
   const addItemHandler = (productId: number) => storeCtx.addItem(productId);
   return (
     <BasketTable
+      status={storeCtx.status}
       items={storeCtx.basket.items}
       onRemoveItem={removeItemHandler}
-      onAddItem = {addItemHandler}
+      onAddItem={addItemHandler}
     />
   );
 };
