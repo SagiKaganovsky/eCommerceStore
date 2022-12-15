@@ -1,4 +1,5 @@
 import {
+  Button,
   Divider,
   Grid,
   Paper,
@@ -12,9 +13,12 @@ import {
 import { useLoaderData } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import api from "../../app/utils/api";
+import { useStoreContext } from "../../store/storeContext";
 
 const ProductDetails: React.FC = () => {
+  const storeCtx = useStoreContext();
   const product = useLoaderData() as Product;
+
   return (
     <Paper elevation={1} sx={{ my: 10, width: "100%" }}>
       <Grid container spacing={6}>
@@ -57,6 +61,23 @@ const ProductDetails: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            style={{ minWidth: "100%" }}
+            variant="contained"
+            onClick={() => storeCtx?.addItem(product.id)}
+          >
+            Add item
+          </Button>
         </Grid>
       </Grid>
     </Paper>
