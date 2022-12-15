@@ -52,12 +52,12 @@ namespace StoreAPI.Controllers
             return CreatedAtRoute("GetBasket", _mapper.Map<BasketDto>(basket));
         }
         [HttpDelete]
-        public async Task<ActionResult> RemoveItemToBasket(int productId, int quantiry)
+        public async Task<ActionResult> RemoveItemToBasket(int productId, int quantity)
         {
             var basket = await RetrieveBasket();
             if (basket == null) { return NotFound(); }
 
-            basket.RemoveItem(productId, quantiry);
+            basket.RemoveItem(productId, quantity);
             var result = await _storeContext.SaveChangesAsync() > 0;
             if (!result)
             {

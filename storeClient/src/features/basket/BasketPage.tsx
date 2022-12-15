@@ -7,7 +7,20 @@ const BasketPage = () => {
   if (!storeCtx?.basket) {
     return <Loader />;
   }
-  return <BasketTable items={storeCtx.basket.items} />;
+  if (storeCtx?.basket.items.length === 0) {
+    return <h1>Basket is empty</h1>;
+  }
+  const removeItemHandler = (productId: number, quantity: number) =>
+    storeCtx.removeItem(productId, quantity);
+
+  const addItemHandler = (productId: number) => storeCtx.addItem(productId);
+  return (
+    <BasketTable
+      items={storeCtx.basket.items}
+      onRemoveItem={removeItemHandler}
+      onAddItem = {addItemHandler}
+    />
+  );
 };
 
 export default BasketPage;

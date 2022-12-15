@@ -14,14 +14,17 @@ import { Bars } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import api from "../../app/utils/api";
+import { useStoreContext } from "../../store/storeContext";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+  const storeCtx = useStoreContext();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const addItemHandler = async () => {
     setLoading(true);
-    await api.Basket.addItem(product.id);
+    const data = await api.Basket.addItem(product.id);
+    storeCtx?.setBasket(data);
     setLoading(false);
   };
 
@@ -58,9 +61,9 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
               "Add to cart"
             ) : (
               <Bars
-                height="80"
-                width="80"
-                color="#4fa94d"
+                height="20"
+                width="30"
+                color="#1976d2"
                 ariaLabel="bars-loading"
                 wrapperStyle={{}}
                 wrapperClass=""

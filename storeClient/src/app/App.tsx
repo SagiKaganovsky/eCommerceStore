@@ -29,6 +29,12 @@ function App() {
     if (buyerId) {
       const data = (await api.Basket.get()) as Basket;
       storeCtx?.setBasket(data);
+    } else {
+      storeCtx?.setBasket({
+        id: -1,
+        buyerId: "",
+        items: [],
+      });
     }
   };
 
