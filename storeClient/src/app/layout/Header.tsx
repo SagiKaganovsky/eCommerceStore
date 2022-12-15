@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { KeyboardArrowUp, ShoppingCart } from "@mui/icons-material";
 import { Link, NavLink } from "react-router-dom";
+import { useStoreContext } from "../../store/storeContext";
 const pages = [
   { title: "Home", path: "/" },
   { title: "Catalog", path: "/catalog" },
@@ -36,7 +37,12 @@ interface Props {
   handleDarkModeChange: () => void;
 }
 const Header: React.FC<Props> = (props) => {
-  function ScrollTop(props: Props) {
+  const storeCtx = useStoreContext();
+  const itemsSum = storeCtx?.basket?.items.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+  const ScrollTop = (props: Props) => {
     const { children, window } = props;
     // Note that you normally won't need to set the window ref as useScrollTrigger
     // will default to window.
@@ -70,7 +76,8 @@ const Header: React.FC<Props> = (props) => {
         </Box>
       </Fade>
     );
-  }
+  };
+
   return (
     <>
       <CssBaseline />
@@ -106,7 +113,7 @@ const Header: React.FC<Props> = (props) => {
           <Box>
             <Link to="/basket">
               <IconButton sx={{ color: "inherit" }}>
-                <Badge badgeContent={3} max={100} color="secondary">
+                <Badge badgeContent={itemsSum} max={100} color="secondary">
                   <ShoppingCart color="action" />
                 </Badge>
               </IconButton>

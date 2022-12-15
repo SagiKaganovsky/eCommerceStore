@@ -5,7 +5,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { loader as catalogLoader } from "./features/catalog/Catalog";
 import { loader as productLoader } from "./features/catalog/ProductDetails";
-import { loader as basketLoader } from "./features/basket/BasketPage";
 import App from "./app/App";
 import AppBoundary from "./features/error/AppBoundary";
 
@@ -14,6 +13,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./index.css";
+import { StoreProvider } from "./store/storeContext";
 
 const About = React.lazy(() => import("./features/about/About"));
 const HomePage = React.lazy(() => import("./features/home/HomePage"));
@@ -65,11 +65,14 @@ const router = createBrowserRouter([
       {
         path: "/basket",
         element: <BasketPage />,
-        loader: basketLoader,
       },
     ],
   },
 ]);
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
-root.render(<RouterProvider router={router} />);
+root.render(
+  <StoreProvider>
+    <RouterProvider router={router} />{" "}
+  </StoreProvider>
+);
