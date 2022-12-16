@@ -12,6 +12,17 @@ const initialBasketState: BasketState = {
   status: "idle",
 };
 
+export const getBasketAsync = createAsyncThunk<Basket>(
+  "basket/getBasketAsync",
+  async () => {
+    try {
+      return await api.Basket.get();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 export const addBasketItemAsync = createAsyncThunk<
   Basket,
   { productId: number; quantity?: number }
@@ -37,11 +48,7 @@ export const removeBasketItemAsync = createAsyncThunk<
 export const basketSlice = createSlice({
   name: "basket",
   initialState: initialBasketState,
-  reducers: {
-    setBasket: (state, action) => {
-      state.basket = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(addBasketItemAsync.pending, (state, action) => {
       state.status = "pendingAddItem" + action.meta.arg.productId;
@@ -80,6 +87,23 @@ export const basketSlice = createSlice({
     });
     builder.addCase(removeBasketItemAsync.rejected, (state) => {
       state.status = "idle";
+    });
+    builder.addCase(getBasketAsync.pending, (state, action) => {
+      state.status = "pending";
+    });
+    builder.addCase(getBasketAsync.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.basket = action.payload;
+      } else {
+        state.basket = {
+          id: -1,
+          buyerId: "",
+          items: [],
+        };
+      }
+    });
+    builder.addCase(getBasketAsync.rejected, (state) => {
+      state.status = "rejected";
     });
   },
 });
