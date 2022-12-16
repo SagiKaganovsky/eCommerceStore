@@ -1,3 +1,5 @@
+import { Button, Grid } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useStoreContext } from "../../store/storeContext";
 import Loader from "../loader/Loader";
 import BasketTable from "./BasketTable";
@@ -15,12 +17,22 @@ const BasketPage = () => {
 
   const addItemHandler = (productId: number) => storeCtx.addItem(productId);
   return (
-    <BasketTable
-      status={storeCtx.status}
-      items={storeCtx.basket.items}
-      onRemoveItem={removeItemHandler}
-      onAddItem={addItemHandler}
-    />
+    <>
+      <BasketTable
+        status={storeCtx.status}
+        items={storeCtx.basket.items}
+        onRemoveItem={removeItemHandler}
+        onAddItem={addItemHandler}
+      />
+      <Grid container>
+        <Grid item xs={6}/>
+        <Grid item xs={6}>
+          <Button component={Link} to="/checkout" variant="contained" fullWidth>
+            Checkout
+          </Button>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 

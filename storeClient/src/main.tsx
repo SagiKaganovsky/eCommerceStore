@@ -25,6 +25,9 @@ const Login = React.lazy(() => import("./features/login/Login"));
 const Register = React.lazy(() => import("./features/register/Register"));
 const Contact = React.lazy(() => import("./features/contact/Contact"));
 const BasketPage = React.lazy(() => import("./features/basket/BasketPage"));
+const CheckoutPage = React.lazy(
+  () => import("./features/checkout/CheckoutPage")
+);
 
 const router = createBrowserRouter([
   {
@@ -65,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/basket",
         element: <BasketPage />,
+      },
+      {
+        path: "/checkout",
+        element: <CheckoutPage />,
       },
     ],
   },
