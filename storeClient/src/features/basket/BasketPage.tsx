@@ -1,8 +1,10 @@
 import { Button, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import api from "../../app/utils/api";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { basketActions, initialStatusState } from "../../store/basketSlice";
+import {
+  addBasketItemAsync,
+  removeBasketItemAsync,
+} from "../../store/basketSlice";
 import Loader from "../loader/Loader";
 import BasketTable from "./BasketTable";
 
@@ -15,34 +17,16 @@ const BasketPage = () => {
   if (basket.items.length === 0) {
     return <h1>Basket is empty</h1>;
   }
-  const removeItemHandler = async (
+  const removeItemHandler = (
     productId: number,
     quantity: number,
     action: string
   ) => {
-    dispatch(
-      basketActions.setStatus({
-        loading: true,
-        productId: productId,
-        action: action,
-      })
-    );
-    await api.Basket.removeItem(productId, quantity);
-    dispatch(basketActions.removeItem({ productId, quantity }));
-    dispatch(basketActions.setStatus(initialStatusState));
+    dispatch(removeBasketItemAsync({ productId, quantity, action }));
   };
 
-  const addItemHandler = async (productId: number) => {
-    dispatch(
-      basketActions.setStatus({
-        loading: true,
-        productId: productId,
-        action: "add",
-      })
-    );
-    const data = await api.Basket.addItem(productId);
-    dispatch(basketActions.setBasket(data));
-    dispatch(basketActions.setStatus(initialStatusState));
+  const addItemHandler = (productId: number) => {
+    dispatch(addBasketItemAsync({ productId }));
   };
   return (
     <>

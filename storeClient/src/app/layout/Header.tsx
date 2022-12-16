@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { KeyboardArrowUp, ShoppingCart } from "@mui/icons-material";
 import { Link, NavLink } from "react-router-dom";
-import { useStoreContext } from "../../store/storeContext";
 import { useAppSelector } from "../../store";
 const pages = [
   { title: "Home", path: "/" },

@@ -9,24 +9,19 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { Bars } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../app/models/product";
-import api from "../../app/utils/api";
-import { useAppDispatch } from "../../store";
-import { basketActions } from "../../store/basketSlice";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { addBasketItemAsync } from "../../store/basketSlice";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  const [loading, setLoading] = useState(false);
+  const { status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const addItemHandler = async () => {
-    setLoading(true);
-    const data = await api.Basket.addItem(product.id);
-    dispatch(basketActions.setBasket(data));
-    setLoading(false);
+  const addItemHandler = () => {
+    dispatch(addBasketItemAsync({ productId: product.id }));
   };
 
   return (
@@ -58,7 +53,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       <CardActions>
         {
           <Button size="small" onClick={addItemHandler}>
-            {!loading ? (
+            {!status.includes("pendingAddItem" + product.id) ? (
               "Add to cart"
             ) : (
               <Bars

@@ -12,11 +12,11 @@ import {
 } from "@mui/material/";
 import { TailSpin } from "react-loader-spinner";
 import { BasketItem } from "../../app/models/basket";
-import { Status } from "../../app/models/status";
+import { ProductStatus } from "../../app/models/product";
 
 interface Props {
   items: BasketItem[];
-  status: Status;
+  status: string;
   onRemoveItem: (productId: number, quantity: number, action: string) => void;
   onAddItem: (productId: number) => void;
 }
@@ -92,11 +92,11 @@ const BasketTable: React.FC<Props> = ({
                 <Box>
                   <IconButton
                     color="error"
-                    onClick={() => onRemoveItem(item.productId, 1, "remove")}
+                    onClick={() => onRemoveItem(item.productId, 1, "Remove")}
                   >
-                    {status.loading &&
-                    status.productId === item.productId &&
-                    status.action === "remove" ? (
+                    {status.includes(
+                      "pendingRemoveItemRemove" + item.productId
+                    ) ? (
                       <Spinner />
                     ) : (
                       <Remove />
@@ -107,9 +107,7 @@ const BasketTable: React.FC<Props> = ({
                     color="error"
                     onClick={() => onAddItem(item.productId)}
                   >
-                    {status.loading &&
-                    status.productId === item.productId &&
-                    status.action === "add" ? (
+                    {status.includes("pendingAddItem" + item.productId) ? (
                       <Spinner />
                     ) : (
                       <Add />
@@ -125,16 +123,12 @@ const BasketTable: React.FC<Props> = ({
                 <IconButton
                   color="error"
                   onClick={() =>
-                    onRemoveItem(item.productId, item.quantity, "delete")
+                    onRemoveItem(item.productId, item.quantity, "Delete")
                   }
                 >
-                  {status.loading &&
-                  status.productId === item.productId &&
-                  status.action === "delete" ? (
-                    <Spinner />
-                  ) : (
-                    <Delete />
-                  )}
+                  {status.includes(
+                      "pendingRemoveItemDelete" + item.productId
+                    ) ? <Spinner /> : <Delete />}
                 </IconButton>
               </TableCell>
             </TableRow>
