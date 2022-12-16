@@ -3,15 +3,16 @@ import Cookies from "js-cookie";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Loader from "../features/loader/Loader";
-import { useStoreContext } from "../store/storeContext";
 import Header from "./layout/Header";
 import api from "./utils/api";
 import { Basket } from "./models/basket";
+import { useAppDispatch } from "../store";
+import { basketActions } from "../store/basketSlice";
 
 const themeMode = (mode: boolean) => (mode ? "dark" : "light");
 
 function App() {
-  const storeCtx = useStoreContext();
+  const dispatch = useAppDispatch();
   const [darkMode, setDarkMode] = useState(Cookies.get("theme") === "dark");
   const theme = createTheme({
     palette: {
@@ -28,13 +29,15 @@ function App() {
     const buyerId = Cookies.get("buyerId");
     if (buyerId) {
       const data = (await api.Basket.get()) as Basket;
-      storeCtx?.setBasket(data);
+      dispatch(basketActions.setBasket(data));
     } else {
-      storeCtx?.setBasket({
-        id: -1,
-        buyerId: "",
-        items: [],
-      });
+      dispatch(
+        basketActions.setBasket({
+          id: -1,
+          buyerId: "",
+          items: [],
+        })
+      );
     }
   };
 

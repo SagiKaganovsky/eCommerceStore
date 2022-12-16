@@ -13,12 +13,16 @@ import {
 import { useLoaderData } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import api from "../../app/utils/api";
-import { useStoreContext } from "../../store/storeContext";
+import { useAppDispatch } from "../../store";
+import { basketActions } from "../../store/basketSlice";
 
 const ProductDetails: React.FC = () => {
-  const storeCtx = useStoreContext();
+  const dispatch = useAppDispatch();
   const product = useLoaderData() as Product;
-
+  const addItemHandler = async () => {
+    const data = await api.Basket.addItem(product.id);
+    dispatch(basketActions.setBasket(data));
+  };
   return (
     <Paper elevation={1} sx={{ my: 10, width: "100%" }}>
       <Grid container spacing={6}>
@@ -74,7 +78,7 @@ const ProductDetails: React.FC = () => {
           <Button
             style={{ minWidth: "100%" }}
             variant="contained"
-            onClick={() => storeCtx?.addItem(product.id)}
+            onClick={addItemHandler}
           >
             Add item
           </Button>

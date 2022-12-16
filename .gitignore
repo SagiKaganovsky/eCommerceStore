@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /db/*.sqlite3
 /StoreAPI/store.db
 /storeClient/public/images
+/StoreAPI/store.db-wal
+/StoreAPI/store.db-shm

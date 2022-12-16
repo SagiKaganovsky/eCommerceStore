@@ -13,7 +13,8 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./index.css";
-import { StoreProvider } from "./store/storeContext";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const About = React.lazy(() => import("./features/about/About"));
 const HomePage = React.lazy(() => import("./features/home/HomePage"));
@@ -79,7 +80,7 @@ const router = createBrowserRouter([
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 root.render(
-  <StoreProvider>
-    <RouterProvider router={router} />{" "}
-  </StoreProvider>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

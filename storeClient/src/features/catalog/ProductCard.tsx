@@ -14,17 +14,18 @@ import { Bars } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import api from "../../app/utils/api";
-import { useStoreContext } from "../../store/storeContext";
+import { useAppDispatch } from "../../store";
+import { basketActions } from "../../store/basketSlice";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  const storeCtx = useStoreContext();
   const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const addItemHandler = async () => {
     setLoading(true);
     const data = await api.Basket.addItem(product.id);
-    storeCtx?.setBasket(data);
+    dispatch(basketActions.setBasket(data));
     setLoading(false);
   };
 

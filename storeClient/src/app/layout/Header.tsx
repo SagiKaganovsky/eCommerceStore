@@ -17,6 +17,7 @@ import {
 import { KeyboardArrowUp, ShoppingCart } from "@mui/icons-material";
 import { Link, NavLink } from "react-router-dom";
 import { useStoreContext } from "../../store/storeContext";
+import { useAppSelector } from "../../store";
 const pages = [
   { title: "Home", path: "/" },
   { title: "Catalog", path: "/catalog" },
@@ -37,11 +38,8 @@ interface Props {
   handleDarkModeChange: () => void;
 }
 const Header: React.FC<Props> = (props) => {
-  const storeCtx = useStoreContext();
-  const itemsSum = storeCtx?.basket?.items.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const { basket } = useAppSelector((state) => state.basket);
+  const itemsSum = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
   const ScrollTop = (props: Props) => {
     const { children, window } = props;
     // Note that you normally won't need to set the window ref as useScrollTrigger

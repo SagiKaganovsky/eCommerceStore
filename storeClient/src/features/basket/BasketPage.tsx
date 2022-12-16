@@ -1,31 +1,59 @@
 import { Button, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useStoreContext } from "../../store/storeContext";
+import api from "../../app/utils/api";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { basketActions, initialStatusState } from "../../store/basketSlice";
 import Loader from "../loader/Loader";
 import BasketTable from "./BasketTable";
 
 const BasketPage = () => {
-  const storeCtx = useStoreContext();
-  if (!storeCtx?.basket) {
+  const { basket, status } = useAppSelector((state) => state.basket);
+  const dispatch = useAppDispatch();
+  if (!basket) {
     return <Loader />;
   }
-  if (storeCtx?.basket.items.length === 0) {
+  if (basket.items.length === 0) {
     return <h1>Basket is empty</h1>;
   }
-  const removeItemHandler = (productId: number, quantity: number) =>
-    storeCtx.removeItem(productId, quantity);
+  const removeItemHandler = async (
+    productId: number,
+    quantity: number,
+    action: string
+  ) => {
+    dispatch(
+      basketActions.setStatus({
+        loading: true,
+        productId: productId,
+        action: action,
+      })
+    );
+    await api.Basket.removeItem(productId, quantity);
+    dispatch(basketActions.removeItem({ productId, quantity }));
+    dispatch(basketActions.setStatus(initialStatusState));
+  };
 
-  const addItemHandler = (productId: number) => storeCtx.addItem(productId);
+  const addItemHandler = async (productId: number) => {
+    dispatch(
+      basketActions.setStatus({
+        loading: true,
+        productId: productId,
+        action: "add",
+      })
+    );
+    const data = await api.Basket.addItem(productId);
+    dispatch(basketActions.setBasket(data));
+    dispatch(basketActions.setStatus(initialStatusState));
+  };
   return (
     <>
       <BasketTable
-        status={storeCtx.status}
-        items={storeCtx.basket.items}
+        status={status}
+        items={basket.items}
         onRemoveItem={removeItemHandler}
         onAddItem={addItemHandler}
       />
       <Grid container>
-        <Grid item xs={6}/>
+        <Grid item xs={6} />
         <Grid item xs={6}>
           <Button component={Link} to="/checkout" variant="contained" fullWidth>
             Checkout

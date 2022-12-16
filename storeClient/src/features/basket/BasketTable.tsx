@@ -17,7 +17,7 @@ import { Status } from "../../app/models/status";
 interface Props {
   items: BasketItem[];
   status: Status;
-  onRemoveItem: (productId: number, quantity: number) => void;
+  onRemoveItem: (productId: number, quantity: number, action: string) => void;
   onAddItem: (productId: number) => void;
 }
 
@@ -92,7 +92,7 @@ const BasketTable: React.FC<Props> = ({
                 <Box>
                   <IconButton
                     color="error"
-                    onClick={() => onRemoveItem(item.productId, 1)}
+                    onClick={() => onRemoveItem(item.productId, 1, "remove")}
                   >
                     {status.loading &&
                     status.productId === item.productId &&
@@ -124,9 +124,17 @@ const BasketTable: React.FC<Props> = ({
               <TableCell align="center">
                 <IconButton
                   color="error"
-                  onClick={() => onRemoveItem(item.productId, item.quantity)}
+                  onClick={() =>
+                    onRemoveItem(item.productId, item.quantity, "delete")
+                  }
                 >
-                  <Delete />
+                  {status.loading &&
+                  status.productId === item.productId &&
+                  status.action === "delete" ? (
+                    <Spinner />
+                  ) : (
+                    <Delete />
+                  )}
                 </IconButton>
               </TableCell>
             </TableRow>
