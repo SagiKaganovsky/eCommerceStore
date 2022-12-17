@@ -10,19 +10,42 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import { TailSpin } from "react-loader-spinner";
+import { useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
-import api from "../../app/utils/api";
-import { useAppDispatch } from "../../store";
-import { basketActions } from "../../store/basketSlice";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { addBasketItemAsync } from "../../store/basketSlice";
+import { fetchProductAsync, productSelectors } from "../../store/catalogSlice";
+import Loader from "../loader/Loader";
 
 const ProductDetails: React.FC = () => {
   const dispatch = useAppDispatch();
-  const product = useLoaderData() as Product;
-  const addItemHandler = async () => {
-    const data = await api.Basket.addItem(product.id);
-    dispatch(basketActions.setBasket(data));
+
+  const params = useParams<{ id: string }>();
+  const productId = parseInt(params.id!);
+
+  const product = useAppSelector((state) =>
+    productSelectors.selectById(state, productId)
+  );
+  const { status } = useAppSelector((state) => state.catalog);
+  const { status: basketStatus } = useAppSelector((state) => state.basket);
+  const addItemHandler = () => {
+    dispatch(addBasketItemAsync({ productId: productId }));
   };
+
+  useEffect(() => {
+    if (!product) {
+      dispatch(fetchProductAsync(productId));
+    }
+  }, [product, dispatch]);
+
+  if (status.includes("pending")) {
+    return <Loader />;
+  }
+  if (!product) {
+    return <div>Product Not Found</div>;
+  }
   return (
     <Paper elevation={1} sx={{ my: 10, width: "100%" }}>
       <Grid container spacing={6}>
@@ -80,7 +103,20 @@ const ProductDetails: React.FC = () => {
             variant="contained"
             onClick={addItemHandler}
           >
-            Add item
+            {basketStatus.includes("pending") ? (
+              <TailSpin
+                height="21"
+                width="21"
+                color="blue"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            ) : (
+              "Add item"
+            )}
           </Button>
         </Grid>
       </Grid>
@@ -89,8 +125,3 @@ const ProductDetails: React.FC = () => {
 };
 
 export default ProductDetails;
-
-export const loader = ({ params }: any) => {
-  const { id } = params;
-  return api.Catalog.getProductById(id);
-};

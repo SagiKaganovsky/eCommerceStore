@@ -12,7 +12,6 @@ import {
 } from "@mui/material/";
 import { TailSpin } from "react-loader-spinner";
 import { BasketItem } from "../../app/models/basket";
-import { ProductStatus } from "../../app/models/product";
 
 interface Props {
   items: BasketItem[];

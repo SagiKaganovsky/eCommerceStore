@@ -8,9 +8,10 @@ axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    if (error.response?.status === 404) {
-      throw new Response("Not Found", { status: 404 });
-    }
+    throw new Response("Got Some Error", {
+      status: error.status,
+      statusText: error.message,
+    });
   }
 );
 
@@ -19,7 +20,7 @@ const Catalog = {
     const response = await axios.get("products");
     return response.data;
   },
-  getProductById: async (id: string) => {
+  getProductById: async (id: number) => {
     const response = await axios.get(`products/${id}`);
     return response.data;
   },
@@ -31,7 +32,9 @@ const Basket = {
     return response.data;
   },
   addItem: async (productId: number, quantity = 1) => {
-    const response = await axios.post(`basket?productId=${productId}&quantity=${quantity}`);
+    const response = await axios.post(
+      `basket?productId=${productId}&quantity=${quantity}`
+    );
     return response.data;
   },
   removeItem: async (productId: number, quantity = 1) => {

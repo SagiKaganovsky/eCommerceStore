@@ -1,10 +1,8 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { loader as catalogLoader } from "./features/catalog/Catalog";
-import { loader as productLoader } from "./features/catalog/ProductDetails";
 import App from "./app/App";
 import AppBoundary from "./features/error/AppBoundary";
 
@@ -43,12 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/catalog",
         element: <Catalog />,
-        loader: catalogLoader,
       },
       {
         path: "/catalog/:id",
         element: <ProductDetails />,
-        loader: productLoader,
       },
       {
         path: "/about",
