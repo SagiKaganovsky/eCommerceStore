@@ -1,11 +1,17 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { fetchProductsAsync, productSelectors } from "../../store/catalogSlice";
+import {
+  fetchProductsAsync,
+  fetchProductsFiltersAsync,
+  productSelectors,
+} from "../../store/catalogSlice";
 import ProductList from "./ProductList";
 
 const Catalog: React.FC = () => {
   const products = useAppSelector(productSelectors.selectAll);
-  const { productsLoaded } = useAppSelector((state) => state.catalog);
+  const { productsLoaded, filtersLoaded } = useAppSelector(
+    (state) => state.catalog
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -14,6 +20,12 @@ const Catalog: React.FC = () => {
     }
   }, [productsLoaded, dispatch]);
 
+  useEffect(() => {
+    if (!filtersLoaded) {
+      dispatch(fetchProductsFiltersAsync());
+    }
+  }, [filtersLoaded, dispatch]);
+  
   return <ProductList products={products} />;
 };
 

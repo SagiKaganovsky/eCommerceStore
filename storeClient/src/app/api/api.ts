@@ -24,6 +24,10 @@ const Catalog = {
     const response = await axios.get(`products/${id}`);
     return response.data;
   },
+  getProductsFilters: async () => {
+    const response = await axios.get('products/filters');
+    return response.data;
+  },
 };
 
 const Basket = {
