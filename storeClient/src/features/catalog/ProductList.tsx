@@ -4,9 +4,9 @@ import ProductCard from "./ProductCard";
 
 const ProductList: React.FC<{ products: Product[] }> = ({ products }) => {
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={4}>
       {products.map((product: Product) => (
-        <Grid key={product.id} item xs={4} md={3}>
+        <Grid key={product.id} item xs={4}>
           <ProductCard product={product} />
         </Grid>
       ))}
