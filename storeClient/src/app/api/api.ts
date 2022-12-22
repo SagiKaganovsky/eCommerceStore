@@ -16,8 +16,8 @@ axios.interceptors.response.use(
 );
 
 const Catalog = {
-  getProducts: async () => {
-    const response = await axios.get("products");
+  getProducts: async (params?: URLSearchParams) => {
+    const response = await axios.get("products", { params });
     return response.data;
   },
   getProductById: async (id: number) => {
@@ -25,7 +25,7 @@ const Catalog = {
     return response.data;
   },
   getProductsFilters: async () => {
-    const response = await axios.get('products/filters');
+    const response = await axios.get("products/filters");
     return response.data;
   },
 };
