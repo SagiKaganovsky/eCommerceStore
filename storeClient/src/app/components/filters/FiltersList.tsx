@@ -4,14 +4,35 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  FormHelperText,
 } from "@mui/material";
+import { useState } from "react";
 
-const FiltersList: React.FC<{
+interface Props {
   list: string[];
+  checkedList?: string[];
   label: string;
-  handleChange: (item: string) => void;
-}> = ({ list, label, handleChange }) => {
+  handleChange: (items: string[]) => void;
+}
+
+const FiltersList: React.FC<Props> = ({
+  list,
+  checkedList,
+  label,
+  handleChange,
+}) => {
+  const [checkedItems, setCheckedItems] = useState(checkedList || []);
+
+  const checkedHandler = (value: string) => {
+    let newCheckedItems: string[] = [];
+    const itemIndex = checkedItems.findIndex((item) => item === value);
+    if (itemIndex === -1) {
+      newCheckedItems = [...checkedItems, value];
+    } else {
+      newCheckedItems = checkedItems.filter((item) => item !== value);
+    }
+    handleChange(newCheckedItems);
+    setCheckedItems(newCheckedItems);
+  };
   return (
     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
       <FormLabel component="legend">{label}</FormLabel>
@@ -21,7 +42,7 @@ const FiltersList: React.FC<{
             <FormControlLabel
               key={item}
               control={
-                <Checkbox onChange={() => handleChange(item)} name={item} />
+                <Checkbox onChange={() => checkedHandler(item)} name={item} />
               }
               label={item}
             />

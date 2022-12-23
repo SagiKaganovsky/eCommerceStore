@@ -5,18 +5,22 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { useState } from "react";
 
 interface SortOption {
   value: string;
   label: string;
 }
-
-const Sort: React.FC<{
+interface Props {
   sortOptions: SortOption[];
+  selectedValue: string;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ sortOptions, handleChange }) => {
-  const [selectedValue, setSelectedValue] = useState(sortOptions[0].value);
+}
+
+const Sort: React.FC<Props> = ({
+  sortOptions,
+  selectedValue,
+  handleChange,
+}) => {
   return (
     <FormControl>
       <FormLabel id="sort-radio-buttons">Sort by</FormLabel>
@@ -24,10 +28,7 @@ const Sort: React.FC<{
         aria-labelledby="sort-radio-buttons"
         name="sort-radio-buttons"
         value={selectedValue}
-        onChange={(e) => {
-          handleChange(e);
-          setSelectedValue(e.target.value);
-        }}
+        onChange={handleChange}
       >
         {sortOptions.map((option) => {
           return (

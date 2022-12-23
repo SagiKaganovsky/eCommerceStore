@@ -6,6 +6,7 @@ import {
 import { RootState } from ".";
 import { Product, ProductParams } from "../app/models/product";
 import api from "../app/api/api";
+import { MetaData } from "../app/models/pagination";
 
 interface CatalogState {
   productsLoaded: boolean;
@@ -14,6 +15,7 @@ interface CatalogState {
   brands: string[];
   types: string[];
   productParams: ProductParams;
+  metaData: MetaData | null;
 }
 
 const productAdapter = createEntityAdapter<Product>();
@@ -30,7 +32,7 @@ const getAxiosParams = (productParams: ProductParams) => {
     params.append("brands", productParams.brands.toString());
   }
   if (productParams.types) {
-    params.append("bratypesnds", productParams.types.toString());
+    params.append("types", productParams.types.toString());
   }
   return params;
 };
@@ -42,7 +44,11 @@ export const fetchProductsAsync = createAsyncThunk<
 >("catalog/fetchProductsAsync", async (_, thunkAPI) => {
   try {
     const { productParams } = thunkAPI.getState().catalog;
-    return await api.Catalog.getProducts(getAxiosParams(productParams));
+    const response = await api.Catalog.getProducts(
+      getAxiosParams(productParams)
+    );
+    thunkAPI.dispatch(catalogActions.setMetaData(response.metaData));
+    return response.items;
   } catch (error: any) {
     thunkAPI.rejectWithValue({ error: error.statusText });
   }
@@ -84,6 +90,7 @@ export const catalogSlice = createSlice({
     brands: [],
     types: [],
     productParams: initProductParams,
+    metaData: null,
   }),
   reducers: {
     setProductParams: (state, action) => {
@@ -92,6 +99,9 @@ export const catalogSlice = createSlice({
     },
     resetProductParams: (state) => {
       state.productParams = initProductParams;
+    },
+    setMetaData: (state, action) => {
+      state.metaData = action.payload;
     },
   },
   extraReducers: (builder) => {

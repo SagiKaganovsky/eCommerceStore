@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { FidgetSpinner } from "react-loader-spinner";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
+  catalogActions,
   fetchProductsAsync,
   fetchProductsFiltersAsync,
   productSelectors,
@@ -29,9 +30,8 @@ const sortOptions = [
 
 const Catalog: React.FC = () => {
   const products = useAppSelector(productSelectors.selectAll);
-  const { productsLoaded, filtersLoaded, brands, types } = useAppSelector(
-    (state) => state.catalog
-  );
+  const { productsLoaded, filtersLoaded, brands, types, productParams } =
+    useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -55,8 +55,11 @@ const Catalog: React.FC = () => {
         <Paper sx={{ mb: 2, p: 2 }}>
           <Sort
             sortOptions={sortOptions}
+            selectedValue={productParams.orderBy}
             handleChange={(e) => {
-              console.log(e.target.value);
+              dispatch(
+                catalogActions.setProductParams({ orderBy: e.target.value })
+              );
             }}
           />
         </Paper>
@@ -64,14 +67,20 @@ const Catalog: React.FC = () => {
           <FiltersList
             label="Brands"
             list={brands}
-            handleChange={(item) => console.log(item)}
+            checkedList={[]}
+            handleChange={(items) =>
+              dispatch(catalogActions.setProductParams({ brands: items }))
+            }
           />
         </Paper>
         <Paper sx={{ mb: 2 }}>
           <FiltersList
             label="Type"
             list={types}
-            handleChange={(item) => console.log(item)}
+            checkedList={[]}
+            handleChange={(items) =>
+              dispatch(catalogActions.setProductParams({ types: items }))
+            }
           />
         </Paper>
       </Grid>
@@ -79,19 +88,19 @@ const Catalog: React.FC = () => {
         {productsLoaded ? (
           <ProductList products={products} />
         ) : (
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <FidgetSpinner />
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
+            <FidgetSpinner backgroundColor="#1976d2" />
           </Box>
         )}
       </Grid>
       <Grid item xs={3} />
       <Grid item xs={9}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          height="100%"
-        >
+        <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography>Displaying 1-6 of 20 items</Typography>
           <Pagination
             color="secondary"

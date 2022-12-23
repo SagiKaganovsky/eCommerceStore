@@ -1,10 +1,18 @@
 import axios, { AxiosError } from "axios";
+import { PaginatedResponse } from "../models/pagination";
 // axios.defaults.baseURL = "http://restore.local";
 // axios.defaults.baseURL = "https://localhost:7116";
 axios.defaults.baseURL = "http://localhost:5179";
 axios.defaults.withCredentials = true;
 axios.interceptors.response.use(
   (response) => {
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+      response.data = new PaginatedResponse(
+        response.data,
+        JSON.parse(pagination)
+      );
+    }
     return response;
   },
   (error: AxiosError) => {
