@@ -1,6 +1,5 @@
-import { Box, Grid, Pagination, Paper, Typography } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import { useEffect } from "react";
-import { FidgetSpinner } from "react-loader-spinner";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
   catalogActions,
@@ -12,6 +11,8 @@ import FiltersList from "../../app/components/filters/FiltersList";
 import Sort from "../../app/components/sort/Sort";
 import ProductList from "./ProductList";
 import ProductSearch from "./ProductSearch";
+import CatalogPagination from "../../app/components/pagination/catalogPagination";
+import { TailSpin } from "react-loader-spinner";
 
 const sortOptions = [
   {
@@ -30,8 +31,14 @@ const sortOptions = [
 
 const Catalog: React.FC = () => {
   const products = useAppSelector(productSelectors.selectAll);
-  const { productsLoaded, filtersLoaded, brands, types, productParams } =
-    useAppSelector((state) => state.catalog);
+  const {
+    productsLoaded,
+    filtersLoaded,
+    brands,
+    types,
+    productParams,
+    metaData,
+  } = useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -47,7 +54,7 @@ const Catalog: React.FC = () => {
   }, [filtersLoaded, dispatch]);
 
   return (
-    <Grid container spacing={4}>
+    <Grid container columnSpacing={4}>
       <Grid item xs={3}>
         <Paper sx={{ mb: 2 }}>
           <ProductSearch />
@@ -64,52 +71,61 @@ const Catalog: React.FC = () => {
           />
         </Paper>
         <Paper sx={{ mb: 2 }}>
-          <FiltersList
-            label="Brands"
-            list={brands}
-            checkedList={[]}
-            handleChange={(items) =>
-              dispatch(catalogActions.setProductParams({ brands: items }))
-            }
-          />
+          {brands.length == 0 ? (
+            <TailSpin color="#1976d2" height="25" width="25" />
+          ) : (
+            <FiltersList
+              label="Brands"
+              list={brands}
+              checkedList={[]}
+              handleChange={(items) =>
+                dispatch(
+                  catalogActions.setProductParams({
+                    brands: items,
+                    pageNumber: 1,
+                  })
+                )
+              }
+            />
+          )}
         </Paper>
         <Paper sx={{ mb: 2 }}>
-          <FiltersList
-            label="Type"
-            list={types}
-            checkedList={[]}
-            handleChange={(items) =>
-              dispatch(catalogActions.setProductParams({ types: items }))
-            }
-          />
+          {types.length == 0 ? (
+            <TailSpin color="#1976d2" height="25" width="25" />
+          ) : (
+            <FiltersList
+              label="Type"
+              list={types}
+              checkedList={[]}
+              handleChange={(items) =>
+                dispatch(
+                  catalogActions.setProductParams({
+                    types: items,
+                    pageNumber: 1,
+                  })
+                )
+              }
+            />
+          )}
         </Paper>
       </Grid>
       <Grid item xs={9}>
-        {productsLoaded ? (
-          <ProductList products={products} />
-        ) : (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-          >
-            <FidgetSpinner backgroundColor="#1976d2" />
-          </Box>
-        )}
+        <ProductList products={products} />
       </Grid>
       <Grid item xs={3} />
-      <Grid item xs={9}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography>Displaying 1-6 of 20 items</Typography>
-          <Pagination
-            color="secondary"
-            size="large"
-            count={10}
-            page={2}
-            onChange={(e, value) => console.log(value)}
+      <Grid item xs={9} sx={{ mt: 2 }}>
+        {metaData && (
+          <CatalogPagination
+            metaData={metaData}
+            onPageChange={(page: number) =>
+              dispatch(
+                catalogActions.setProductParams({
+                  pageNumber: page,
+                })
+              )
+            }
           />
-        </Box>
+        )}
       </Grid>
     </Grid>
   );

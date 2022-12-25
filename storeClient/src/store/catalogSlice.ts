@@ -28,10 +28,10 @@ const getAxiosParams = (productParams: ProductParams) => {
   if (productParams.searchTerm) {
     params.append("searchTerm", productParams.searchTerm);
   }
-  if (productParams.brands) {
+  if (productParams.brands?.length > 0) {
     params.append("brands", productParams.brands.toString());
   }
-  if (productParams.types) {
+  if (productParams.types.length > 0) {
     params.append("types", productParams.types.toString());
   }
   return params;
@@ -79,6 +79,8 @@ const initProductParams: ProductParams = {
   pageNumber: 1,
   pageSize: 6,
   orderBy: "name",
+  brands: [],
+  types: [],
 };
 
 export const catalogSlice = createSlice({

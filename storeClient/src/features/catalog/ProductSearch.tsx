@@ -11,7 +11,10 @@ const ProductSearch: React.FC = () => {
 
   const debouncedSearch = debounce((event: any) => {
     dispatch(
-      catalogActions.setProductParams({ searchTerm: event.target.value })
+      catalogActions.setProductParams({
+        searchTerm: event.target.value,
+        pageNumber: 1,
+      })
     );
   });
   const clearSearchTermHandler = () => {
