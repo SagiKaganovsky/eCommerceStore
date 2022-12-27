@@ -11,7 +11,7 @@ import FiltersList from "../../app/components/filters/FiltersList";
 import Sort from "../../app/components/sort/Sort";
 import ProductList from "./ProductList";
 import ProductSearch from "./ProductSearch";
-import CatalogPagination from "../../app/components/pagination/catalogPagination";
+import CatalogPagination from "../../app/components/pagination/CatalogPagination";
 import { TailSpin } from "react-loader-spinner";
 
 const sortOptions = [

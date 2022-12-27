@@ -20,8 +20,8 @@ const Catalog = React.lazy(() => import("./features/catalog/Catalog"));
 const ProductDetails = React.lazy(
   () => import("./features/catalog/ProductDetails")
 );
-const Login = React.lazy(() => import("./features/login/Login"));
-const Register = React.lazy(() => import("./features/register/Register"));
+const Login = React.lazy(() => import("./features/account/Login"));
+const Register = React.lazy(() => import("./features/account/Register"));
 const Contact = React.lazy(() => import("./features/contact/Contact"));
 const BasketPage = React.lazy(() => import("./features/basket/BasketPage"));
 const CheckoutPage = React.lazy(

@@ -19,7 +19,10 @@ function App() {
   });
 
   const themeHandler = () => {
-    Cookies.set("theme", themeMode(!darkMode));
+    const date = new Date();
+    Cookies.set("theme", themeMode(!darkMode), {
+      expires: date.getFullYear() + 1,
+    });
     setDarkMode((darkMode) => !darkMode);
   };
 

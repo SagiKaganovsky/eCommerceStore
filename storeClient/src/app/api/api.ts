@@ -57,9 +57,26 @@ const Basket = {
   },
 };
 
+const Account = {
+  login: async (user: any) => {
+    const response = await axios.post("account/login", user);
+    return response.data;
+  },
+
+  register: async (user: any) => {
+    const response = await axios.post("account/register", user);
+    return response.data;
+  },
+  currentUser: async () => {
+    const response = await axios.get("account/currentUser");
+    return response.data;
+  },
+};
+
 const api = {
   Catalog,
   Basket,
+  Account,
 };
 
 export default api;
