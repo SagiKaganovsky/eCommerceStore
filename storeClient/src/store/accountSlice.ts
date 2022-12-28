@@ -1,14 +1,17 @@
-import { createAsyncThunk, createSlice, isAllOf } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { FieldValues } from "react-hook-form";
+import { toast } from "react-toastify";
 import api from "../app/api/api";
 import { User } from "../app/models/user";
 
 interface AccountState {
   user: User | null;
+  status: string;
 }
 
 const initialState: AccountState = {
   user: null,
+  status: "pending",
 };
 
 export const signInUser = createAsyncThunk<User, FieldValues>(
@@ -19,7 +22,7 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error: any) {
-      thunkAPI.rejectWithValue({ error: error.statusText });
+      return thunkAPI.rejectWithValue({ error: error.statusText });
     }
   }
 );
@@ -27,33 +30,62 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
 export const fetchCurrentUser = createAsyncThunk<User>(
   "account/fetchCurrentUser",
   async (_, thunkAPI) => {
+    thunkAPI.dispatch(
+      accountActions.setUser(JSON.parse(localStorage.getItem("user")!))
+    );
     try {
       const user = await api.Account.currentUser();
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error: any) {
-      thunkAPI.rejectWithValue({ error: error.statusText });
+      return thunkAPI.rejectWithValue({ error: error.statusText });
     }
+  },
+  {
+    condition: () => {
+      if (!localStorage.getItem("user")) {
+        return false;
+      }
+    },
   }
 );
 
 export const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {},
+  reducers: {
+    signOut: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
+    builder.addCase(fetchCurrentUser.rejected, (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+      toast.error("Session expired - please login again");
+      state.status = "idle";
+    });
     builder.addMatcher(
-      isAllOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
+      isAnyOf(signInUser.pending, fetchCurrentUser.pending),
+      (state) => {
+        state.status = "pending";
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
       (state, action) => {
         state.user = action.payload;
+        state.status = "idle";
       }
     );
-    builder.addMatcher(
-      isAllOf(signInUser.rejected, fetchCurrentUser.rejected),
-      (state, action) => {
-        console.log(action.payload);
-      }
-    );
+    builder.addMatcher(isAnyOf(signInUser.rejected), (state, action) => {
+      console.log(action.payload);
+      state.status = "idle";
+    });
   },
 });
 

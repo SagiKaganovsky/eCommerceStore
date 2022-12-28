@@ -50,7 +50,7 @@ export const fetchProductsAsync = createAsyncThunk<
     thunkAPI.dispatch(catalogActions.setMetaData(response.metaData));
     return response.items;
   } catch (error: any) {
-    thunkAPI.rejectWithValue({ error: error.statusText });
+    return thunkAPI.rejectWithValue({ error: error.statusText });
   }
 });
 export const fetchProductAsync = createAsyncThunk<Product, number>(

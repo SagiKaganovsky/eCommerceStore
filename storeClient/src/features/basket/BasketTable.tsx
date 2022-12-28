@@ -63,7 +63,7 @@ const BasketTable: React.FC<Props> = ({
             <TableCell align="center" colSpan={3}>
               Details
             </TableCell>
-            <TableCell align="right">Price</TableCell>
+            <TableCell align="center">Price</TableCell>
             <TableCell align="right"></TableCell>
           </TableRow>
           <TableRow>

@@ -17,11 +17,16 @@ import {
 import { KeyboardArrowUp, ShoppingCart } from "@mui/icons-material";
 import { Link, NavLink } from "react-router-dom";
 import { useAppSelector } from "../../store";
+import SignedInMenu from "./SignedInMenu";
+import { TailSpin } from "react-loader-spinner";
 const pages = [
   { title: "Home", path: "/" },
   { title: "Catalog", path: "/catalog" },
   { title: "About", path: "/about" },
   { title: "Contact", path: "/contact" },
+];
+
+const rightMenu = [
   { title: "Login", path: "/login" },
   { title: "Register", path: "/register" },
 ];
@@ -38,6 +43,7 @@ interface Props {
 }
 const Header: React.FC<Props> = (props) => {
   const { basket } = useAppSelector((state) => state.basket);
+  const { user, status } = useAppSelector((state) => state.account);
   const itemsSum = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
   const ScrollTop = (props: Props) => {
     const { children, window } = props;
@@ -88,6 +94,20 @@ const Header: React.FC<Props> = (props) => {
           >
             RE-STORE
           </Typography>
+          <Box>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={props.darkMode}
+                    onChange={props.handleDarkModeChange}
+                    aria-label="Dark Light mode switch"
+                  />
+                }
+                label={props.darkMode ? "Dark" : "Light"}
+              />
+            </FormGroup>
+          </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{
@@ -117,19 +137,28 @@ const Header: React.FC<Props> = (props) => {
             </Link>
           </Box>
           <Box sx={{ flexGrow: 1 }} />
-          <Box>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={props.darkMode}
-                    onChange={props.handleDarkModeChange}
-                    aria-label="Dark Light mode switch"
-                  />
-                }
-                label={props.darkMode ? "Dark" : "Light"}
-              />
-            </FormGroup>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "8rem",
+            }}
+          >
+            {status.includes("pending") ? (
+              <TailSpin color="#1976d2" height="25" width="25" />
+            ) : user ? (
+              <SignedInMenu />
+            ) : (
+              rightMenu.map((menu) => (
+                <NavLink
+                  key={menu.title}
+                  to={menu.path}
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  {menu.title}
+                </NavLink>
+              ))
+            )}
           </Box>
         </Toolbar>
       </AppBar>

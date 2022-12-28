@@ -5,7 +5,10 @@ import { Outlet } from "react-router-dom";
 import Loader from "../features/loader/Loader";
 import Header from "./layout/Header";
 import { useAppDispatch } from "../store";
-import { getBasketAsync } from "../store/basketSlice";
+import { fetchBasketAsync } from "../store/basketSlice";
+import { fetchCurrentUser } from "../store/accountSlice";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const themeMode = (mode: boolean) => (mode ? "dark" : "light");
 
@@ -33,14 +36,16 @@ function App() {
         expires: date.getFullYear() + 1,
       });
     }
-    dispatch(getBasketAsync());
-  }, []);
+    dispatch(fetchBasketAsync());
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
       <Header darkMode={darkMode} handleDarkModeChange={themeHandler}>
         <Suspense fallback={<Loader />}>
           <Outlet />
+          <ToastContainer />
         </Suspense>
       </Header>
     </ThemeProvider>

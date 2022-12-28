@@ -1,9 +1,21 @@
 import axios, { AxiosError } from "axios";
+import { store } from "../../store";
 import { PaginatedResponse } from "../models/pagination";
 // axios.defaults.baseURL = "http://restore.local";
 // axios.defaults.baseURL = "https://localhost:7116";
 axios.defaults.baseURL = "http://localhost:5179";
 axios.defaults.withCredentials = true;
+
+axios.interceptors.request.use((config) => {
+  const token = store.getState().account.user?.token;
+  if (token) {
+    if (config.headers) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 axios.interceptors.response.use(
   (response) => {
     const pagination = response.headers["pagination"];
