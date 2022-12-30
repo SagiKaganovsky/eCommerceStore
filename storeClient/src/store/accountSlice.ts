@@ -7,11 +7,13 @@ import { User } from "../app/models/user";
 interface AccountState {
   user: User | null;
   status: string;
+  errors: any;
 }
 
 const initialState: AccountState = {
   user: null,
-  status: "pending",
+  status: "idle",
+  errors: null,
 };
 
 export const signInUser = createAsyncThunk<User, FieldValues>(
@@ -23,6 +25,17 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
       return user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.statusText });
+    }
+  }
+);
+
+export const signUpUser = createAsyncThunk<void, FieldValues>(
+  "account/signUpUser",
+  async (data, thunkAPI) => {
+    try {
+      await api.Account.register(data);
+    } catch (errors: any) {
+      return thunkAPI.rejectWithValue({ errors });
     }
   }
 );
@@ -42,7 +55,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
     }
   },
   {
-    condition: () => {
+    condition: (state) => {
       if (!localStorage.getItem("user")) {
         return false;
       }
@@ -69,10 +82,15 @@ export const accountSlice = createSlice({
       toast.error("Session expired - please login again");
       state.status = "idle";
     });
+    builder.addCase(signUpUser.fulfilled, (state) => {
+      state.status = "fulfilled";
+      state.errors = null;
+    });
     builder.addMatcher(
-      isAnyOf(signInUser.pending, fetchCurrentUser.pending),
+      isAnyOf(signInUser.pending, fetchCurrentUser.pending, signUpUser.pending),
       (state) => {
         state.status = "pending";
+        state.errors = null;
       }
     );
     builder.addMatcher(
@@ -82,10 +100,14 @@ export const accountSlice = createSlice({
         state.status = "idle";
       }
     );
-    builder.addMatcher(isAnyOf(signInUser.rejected), (state, action) => {
-      console.log(action.payload);
-      state.status = "idle";
-    });
+    builder.addMatcher(
+      isAnyOf(signInUser.rejected, signUpUser.rejected),
+      (state, action) => {
+        console.log(action.payload);
+        state.status = "error";
+        state.errors = action.payload;
+      }
+    );
   },
 });
 

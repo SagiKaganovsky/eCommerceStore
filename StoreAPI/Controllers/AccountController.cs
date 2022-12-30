@@ -39,6 +39,8 @@ namespace StoreAPI.Controllers
         {
             var user = new User
             {
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
                 UserName = registerDto.Username,
                 Email = registerDto.Email,
 

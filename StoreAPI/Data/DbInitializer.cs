@@ -11,7 +11,9 @@ namespace StoreAPI.Data
             {
                 var user = new User
                 {
-                    UserName = "Sergei",
+                    FirstName = "Sergei",
+                    LastName ="Kaganovsky",
+                    UserName = "sergei",
                     Email = "sergei@test.com"
                 };
 
@@ -20,6 +22,8 @@ namespace StoreAPI.Data
 
                 var admin = new User
                 {
+                    FirstName = "Sergei",
+                    LastName = "Kaganovsky",
                     UserName = "admin",
                     Email = "admin@test.com"
                 };

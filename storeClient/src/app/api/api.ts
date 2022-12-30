@@ -27,9 +27,13 @@ axios.interceptors.response.use(
     }
     return response;
   },
-  (error: AxiosError) => {
+  (error: any) => {
+    if (error.response?.status === 400 && error.response?.data.status === 400) {
+      const { errors } = error.response.data;
+      return Promise.reject(Object.entries(errors));
+    }
     throw new Response("Got Some Error", {
-      status: error.status,
+      status: error.response?.status,
       statusText: error.message,
     });
   }

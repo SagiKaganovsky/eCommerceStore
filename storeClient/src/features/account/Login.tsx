@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import {
   Avatar,
@@ -10,25 +10,26 @@ import {
   Typography,
   Container,
   Paper,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 
 import { LockOutlined } from "@mui/icons-material";
 import { Bars } from "react-loader-spinner";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { signInUser } from "../../store/accountSlice";
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const { status } = useAppSelector((state) => state.account);
   const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, errors, isValid },
+    formState: { isSubmitting, errors, isValid, isSubmitted },
   } = useForm({ mode: "all" });
 
   const submitForm = async (data: FieldValues) => {
     await dispatch(signInUser(data));
-    navigate("/catalog");
   };
 
   return (
@@ -67,7 +68,6 @@ const Login: React.FC = () => {
             margin="normal"
             fullWidth
             label="Username"
-            autoFocus
             {...register("username", { required: "Username is required" })}
             error={!!errors.username}
             helperText={errors?.username?.message as string}
@@ -81,6 +81,13 @@ const Login: React.FC = () => {
             error={!!errors.password}
             helperText={errors?.password?.message as string}
           />
+
+          {isSubmitted && status === "error" && (
+            <Alert severity="error">
+              <AlertTitle>Wrong Username or Password</AlertTitle>
+            </Alert>
+          )}
+
           {isSubmitting ? (
             <Bars
               height="35"
@@ -104,7 +111,7 @@ const Login: React.FC = () => {
           )}
           <Grid container>
             <Grid item>
-              <Link to="/register">{"Don't have an account? Sign Up"}</Link>
+              <Link to="/signup">{"Don't have an account? Sign Up"}</Link>
             </Grid>
           </Grid>
         </Box>

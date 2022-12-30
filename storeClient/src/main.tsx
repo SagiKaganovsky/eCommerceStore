@@ -21,7 +21,7 @@ const ProductDetails = React.lazy(
   () => import("./features/catalog/ProductDetails")
 );
 const Login = React.lazy(() => import("./features/account/Login"));
-const Register = React.lazy(() => import("./features/account/Register"));
+const Signup = React.lazy(() => import("./features/account/Signup"));
 const Contact = React.lazy(() => import("./features/contact/Contact"));
 const BasketPage = React.lazy(() => import("./features/basket/BasketPage"));
 const CheckoutPage = React.lazy(
@@ -59,8 +59,8 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/register",
-        element: <Register />,
+        path: "/signup",
+        element: <Signup />,
       },
       {
         path: "/basket",

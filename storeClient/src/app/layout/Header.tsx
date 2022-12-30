@@ -28,7 +28,7 @@ const pages = [
 
 const rightMenu = [
   { title: "Login", path: "/login" },
-  { title: "Register", path: "/register" },
+  { title: "Sign up", path: "/signup" },
 ];
 
 interface Props {
