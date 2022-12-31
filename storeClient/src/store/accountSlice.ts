@@ -86,18 +86,20 @@ export const accountSlice = createSlice({
       state.status = "fulfilled";
       state.errors = null;
     });
+    builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.status = "idle";
+    });
+    builder.addCase(signInUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.status = "idle";
+      window.location.href = "/";
+    });
     builder.addMatcher(
       isAnyOf(signInUser.pending, fetchCurrentUser.pending, signUpUser.pending),
       (state) => {
         state.status = "pending";
         state.errors = null;
-      }
-    );
-    builder.addMatcher(
-      isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
-      (state, action) => {
-        state.user = action.payload;
-        state.status = "idle";
       }
     );
     builder.addMatcher(
