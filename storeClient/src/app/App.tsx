@@ -9,6 +9,7 @@ import { fetchBasketAsync } from "../store/basketSlice";
 import { fetchCurrentUser } from "../store/accountSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GlobalHistory } from "./utils/global-history";
 
 const themeMode = (mode: boolean) => (mode ? "dark" : "light");
 
@@ -48,6 +49,7 @@ function App() {
           <ToastContainer />
         </Suspense>
       </Header>
+      <GlobalHistory />
     </ThemeProvider>
   );
 }

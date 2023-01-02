@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import api from "../app/api/api";
 import { User } from "../app/models/user";
+import { globalNavigate } from "../app/utils/global-history";
 
 interface AccountState {
   user: User | null;
@@ -85,6 +86,8 @@ export const accountSlice = createSlice({
     builder.addCase(signUpUser.fulfilled, (state) => {
       state.status = "fulfilled";
       state.errors = null;
+      globalNavigate("/login");
+      toast.success("You successfully signed up please Sign in");
     });
     builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
       state.user = action.payload;
@@ -93,7 +96,7 @@ export const accountSlice = createSlice({
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.user = action.payload;
       state.status = "idle";
-      window.location.href = "/";
+      globalNavigate("/");
     });
     builder.addMatcher(
       isAnyOf(signInUser.pending, fetchCurrentUser.pending, signUpUser.pending),

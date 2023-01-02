@@ -32,7 +32,6 @@ const Signup: React.FC = () => {
   } = useForm({ mode: "all" });
 
   const submitForm = async (data: FieldValues) => {
-    console.log(data);
     await dispatch(signUpUser(data));
   };
 
@@ -119,6 +118,10 @@ const Signup: React.FC = () => {
                 type="password"
                 {...register("password", {
                   required: "Password is required",
+                  pattern:{
+                    value: /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/,
+                    message:"The password must be atleast 1 small-case letter, 1 Capital letter, 1 digit, 1 special character and the length should be between 6-10 characters."
+                  }
                 })}
                 error={!!errors.password}
                 helperText={errors?.password?.message as string}
