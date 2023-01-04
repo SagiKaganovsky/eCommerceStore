@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StoreAPI.Data;
 using StoreAPI.DTO;
 using StoreAPI.Entities;
 using StoreAPI.Services;
@@ -11,11 +14,14 @@ namespace StoreAPI.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
-
-        public AccountController(UserManager<User> userManager, TokenService tokenService)
+        private readonly StoreContext _storeContext;
+        private readonly IMapper _mapper;
+        public AccountController(UserManager<User> userManager, TokenService tokenService, StoreContext storeContext, IMapper mapper)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _storeContext = storeContext;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -27,10 +33,25 @@ namespace StoreAPI.Controllers
                 return Unauthorized();
             }
 
+            var userBasket = await RetrieveBasket(loginDto.Username);
+            var anonymusBasket = await RetrieveBasket(Request.Cookies["buyerId"]);
+
+            if (anonymusBasket != null)
+            {
+                if (userBasket != null)
+                {
+                    _storeContext.Baskets.Remove(userBasket);
+                    anonymusBasket.BuyerId = user.UserName;
+                    Response.Cookies.Delete("buyerId");
+                    await _storeContext.SaveChangesAsync();
+                }
+            }
+
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenService.GenerateToken(user)
+                Token = await _tokenService.GenerateToken(user),
+                Basket = anonymusBasket != null ? _mapper.Map<BasketDto>(anonymusBasket) : _mapper.Map<BasketDto>(userBasket)
             };
         }
 
@@ -72,6 +93,19 @@ namespace StoreAPI.Controllers
                 Email = user.Email,
                 Token = await _tokenService.GenerateToken(user)
             };
+        }
+
+        private async Task<Basket?> RetrieveBasket(string? buyerId)
+        {
+            if (string.IsNullOrEmpty(buyerId))
+            {
+                Response.Cookies.Delete("buyerId");
+                return null;
+            }
+            return await _storeContext.Baskets
+                .Include(i => i.Items)
+                .ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
         }
     }
 }

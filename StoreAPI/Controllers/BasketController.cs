@@ -22,7 +22,7 @@ namespace StoreAPI.Controllers
         [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
-            var basket = await RetrieveBasket();
+            var basket = await RetrieveBasket(GetBuyerId());
 
             if (basket == null) { return NotFound(); }
 
@@ -32,7 +32,7 @@ namespace StoreAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
         {
-            var basket = await RetrieveBasket();
+            var basket = await RetrieveBasket(GetBuyerId());
             if (basket == null)
             {
                 basket = CreateBasket();
@@ -54,7 +54,7 @@ namespace StoreAPI.Controllers
         [HttpDelete]
         public async Task<ActionResult> RemoveItemToBasket(int productId, int quantity)
         {
-            var basket = await RetrieveBasket();
+            var basket = await RetrieveBasket(GetBuyerId());
             if (basket == null) { return NotFound(); }
 
             basket.RemoveItem(productId, quantity);
@@ -66,28 +66,37 @@ namespace StoreAPI.Controllers
             return Ok();
         }
 
-        private async Task<Basket?> RetrieveBasket()
+        private string? GetBuyerId() => User.Identity?.Name ?? Request.Cookies["buyerId"];
+
+        private async Task<Basket?> RetrieveBasket(string? buyerId)
         {
-            if (Request.Cookies["buyerId"] == null)
+            if (string.IsNullOrEmpty(buyerId))
             {
+                Response.Cookies.Delete("buyerId");
                 return null;
             }
             return await _storeContext.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync(x => x.BuyerId == Request.Cookies["buyerId"]);
+                .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
         }
         private Basket CreateBasket()
         {
-            var buyerId = Guid.NewGuid().ToString();
-            var cookieOptions = new CookieOptions
+            var buyerId = User.Identity?.Name;
+            if (string.IsNullOrEmpty(buyerId))
             {
-                IsEssential = true,
-                Expires = DateTime.Now.AddDays(30),
-                SameSite = SameSiteMode.None,
-                Secure = true
-            };
-            Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+                buyerId = Guid.NewGuid().ToString();
+
+                var cookieOptions = new CookieOptions
+                {
+                    IsEssential = true,
+                    Expires = DateTime.Now.AddDays(30),
+                    SameSite = SameSiteMode.None,
+                    Secure = true
+                };
+
+                Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+            }
             var basket = new Basket { BuyerId = buyerId };
             _storeContext.Baskets.Add(basket);
             return basket;
