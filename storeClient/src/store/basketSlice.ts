@@ -10,7 +10,11 @@ interface BasketState {
 }
 
 const initialBasketState: BasketState = {
-  basket: null,
+  basket: {
+    id: -1,
+    buyerId: "",
+    items: [],
+  },
   status: "idle",
 };
 
@@ -100,6 +104,7 @@ export const basketSlice = createSlice({
     });
     builder.addCase(fetchBasketAsync.pending, (state) => {
       state.status = "pending";
+      state.basket = null;
     });
     builder.addCase(fetchBasketAsync.fulfilled, (state, action) => {
       if (action.payload) {
