@@ -53,7 +53,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       <CardActions>
         {
           <Button size="small" onClick={addItemHandler}>
-            {!status.includes("pendingAddItem" + product.id) ? (
+            {!(status === "pendingAddItem" + product.id) ? (
               "Add to cart"
             ) : (
               <Bars

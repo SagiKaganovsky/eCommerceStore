@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import api from "../app/api/api";
 import { User } from "../app/models/user";
 import { globalNavigate } from "../app/utils/global-history";
+import { basketActions } from "./basketSlice";
 
 interface AccountState {
   user: User | null;
@@ -21,8 +22,13 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
   "account/signInUser",
   async (data, thunkAPI) => {
     try {
-      const user = await api.Account.login(data);
+      const userDto = await api.Account.login(data);
+      const { basket, ...user } = userDto;
+      if (basket) {
+        thunkAPI.dispatch(basketActions.setBasket(basket));
+      }
       localStorage.setItem("user", JSON.stringify(user));
+
       return user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.statusText });
@@ -48,7 +54,11 @@ export const fetchCurrentUser = createAsyncThunk<User>(
       accountActions.setUser(JSON.parse(localStorage.getItem("user")!))
     );
     try {
-      const user = await api.Account.currentUser();
+      const userDto = await api.Account.currentUser();
+      const { basket, ...user } = userDto;
+      if (basket) {
+        thunkAPI.dispatch(basketActions.setBasket(basket));
+      }
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error: any) {

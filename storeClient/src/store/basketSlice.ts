@@ -9,12 +9,14 @@ interface BasketState {
   status: string;
 }
 
+const initBasket = {
+  id: -1,
+  buyerId: "",
+  items: [],
+};
+
 const initialBasketState: BasketState = {
-  basket: {
-    id: -1,
-    buyerId: "",
-    items: [],
-  },
+  basket: initBasket,
   status: "idle",
 };
 
@@ -68,7 +70,14 @@ export const removeBasketItemAsync = createAsyncThunk<
 export const basketSlice = createSlice({
   name: "basket",
   initialState: initialBasketState,
-  reducers: {},
+  reducers: {
+    setBasket: (state, action) => {
+      state.basket = action.payload;
+    },
+    clearBasket: (state) => {
+      state.basket = initBasket;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(addBasketItemAsync.pending, (state, action) => {
       state.status = "pendingAddItem" + action.meta.arg.productId;
@@ -110,11 +119,7 @@ export const basketSlice = createSlice({
       if (action.payload) {
         state.basket = action.payload;
       } else {
-        state.basket = {
-          id: -1,
-          buyerId: "",
-          items: [],
-        };
+        state.basket = initBasket;
       }
       state.status = "idle";
     });

@@ -3,6 +3,7 @@ import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { accountActions } from "../../store/accountSlice";
+import { basketActions } from "../../store/basketSlice";
 
 const SignedInMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const SignedInMenu: React.FC = () => {
             <MenuItem
               onClick={() => {
                 popupState.close();
+                dispatch(basketActions.clearBasket());
                 dispatch(accountActions.signOut());
                 navigate("/", { replace: true });
               }}
