@@ -12,6 +12,7 @@ import "@fontsource/roboto/700.css";
 import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import RequireAuth from "./app/auth/RequireAuth";
 
 const About = React.lazy(() => import("./features/about/About"));
 const HomePage = React.lazy(() => import("./features/home/HomePage"));
@@ -67,7 +68,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <CheckoutPage />,
+        element: (
+          <RequireAuth>
+            <CheckoutPage />
+          </RequireAuth>
+        ),
       },
     ],
   },
@@ -76,6 +81,6 @@ const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </Provider>
 );

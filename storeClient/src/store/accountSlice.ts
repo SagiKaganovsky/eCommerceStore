@@ -3,7 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import api from "../app/api/api";
 import { User } from "../app/models/user";
-import { globalNavigate } from "../app/utils/global-history";
+import { globalLocation, globalNavigate } from "../app/utils/global-history";
 import { basketActions } from "./basketSlice";
 
 interface AccountState {
@@ -66,7 +66,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
     }
   },
   {
-    condition: (state) => {
+    condition: () => {
       if (!localStorage.getItem("user")) {
         return false;
       }
@@ -106,7 +106,11 @@ export const accountSlice = createSlice({
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.user = action.payload;
       state.status = "idle";
-      globalNavigate("/");
+      if (!globalLocation.state?.from) {
+        globalNavigate("/");
+      } else {
+        globalNavigate(globalLocation.state?.from);
+      }
     });
     builder.addMatcher(
       isAnyOf(signInUser.pending, fetchCurrentUser.pending, signUpUser.pending),
