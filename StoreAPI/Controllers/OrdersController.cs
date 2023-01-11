@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,26 +15,31 @@ namespace StoreAPI.Controllers
     public class OrdersController : BaseApiController
     {
         private readonly StoreContext _storeContext;
+        private readonly IMapper _mapper;
 
-        public OrdersController(StoreContext storeContext)
+        public OrdersController(StoreContext storeContext, IMapper mapper)
         {
             _storeContext = storeContext;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetOrders()
+        public async Task<ActionResult<List<OrderDto>>> GetOrders()
         {
-            return await _storeContext.Orders
+            var orders = await _storeContext.Orders
                 .Include(o => o.OrderItems)
                 .Where(u => u.BuyerId == User.Identity.Name).ToListAsync();
+            return _mapper.Map<List<OrderDto>>(orders);
         }
 
         [HttpGet("{id}", Name = "GetOrder")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<OrderDto>> GetOrder(int id)
         {
-            return await _storeContext.Orders
+            var order = await _storeContext.Orders
                 .Include(o => o.OrderItems)
                 .Where(u => u.BuyerId == User.Identity.Name && u.Id == id).FirstOrDefaultAsync();
+
+            return _mapper.Map<OrderDto>(order);
 
         }
 

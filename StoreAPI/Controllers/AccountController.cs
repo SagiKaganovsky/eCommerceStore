@@ -41,10 +41,10 @@ namespace StoreAPI.Controllers
                 if (userBasket != null)
                 {
                     _storeContext.Baskets.Remove(userBasket);
-                    anonymusBasket.BuyerId = user.UserName;
-                    Response.Cookies.Delete("buyerId");
-                    await _storeContext.SaveChangesAsync();
                 }
+                anonymusBasket.BuyerId = user.UserName;
+                Response.Cookies.Delete("buyerId");
+                await _storeContext.SaveChangesAsync();
             }
 
             return new UserDto
