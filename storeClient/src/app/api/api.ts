@@ -89,10 +89,26 @@ const Account = {
   },
 };
 
+const Orders = {
+  get: async () => {
+    const response = await axios.get("orders");
+    return response.data;
+  },
+  getOrderById: async (id: number) => {
+    const response = await axios.get(`orders/${id}`);
+    return response.data;
+  },
+  create: async (order: any) => {
+    const response = await axios.post("orders", order);
+    return response.data;
+  },
+};
+
 const api = {
   Catalog,
   Basket,
   Account,
+  Orders
 };
 
 export default api;

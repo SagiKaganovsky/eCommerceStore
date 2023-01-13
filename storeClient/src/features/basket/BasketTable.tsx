@@ -14,10 +14,11 @@ import { TailSpin } from "react-loader-spinner";
 import { BasketItem } from "../../app/models/basket";
 
 interface Props {
+  reviewMode: boolean;
   items: BasketItem[];
   status: string;
-  onRemoveItem: (productId: number, quantity: number, action: string) => void;
-  onAddItem: (productId: number) => void;
+  onRemoveItem?: (productId: number, quantity: number, action: string) => void;
+  onAddItem?: (productId: number) => void;
 }
 
 const TAX_RATE = 0.07;
@@ -39,6 +40,7 @@ const BasketTable: React.FC<Props> = ({
   status,
   onRemoveItem,
   onAddItem,
+  reviewMode,
 }) => {
   const invoiceSubtotal = subtotal(items);
   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
@@ -89,29 +91,33 @@ const BasketTable: React.FC<Props> = ({
               </TableCell>
               <TableCell align="center">
                 <Box>
-                  <IconButton
-                    color="error"
-                    onClick={() => onRemoveItem(item.productId, 1, "Remove")}
-                  >
-                    {status.includes(
-                      "pendingRemoveItemRemove" + item.productId
-                    ) ? (
-                      <Spinner />
-                    ) : (
-                      <Remove />
-                    )}
-                  </IconButton>
+                  {!reviewMode && (
+                    <IconButton
+                      color="error"
+                      onClick={() => onRemoveItem(item.productId, 1, "Remove")}
+                    >
+                      {status.includes(
+                        "pendingRemoveItemRemove" + item.productId
+                      ) ? (
+                        <Spinner />
+                      ) : (
+                        <Remove />
+                      )}
+                    </IconButton>
+                  )}
                   {item.quantity}
-                  <IconButton
-                    color="error"
-                    onClick={() => onAddItem(item.productId)}
-                  >
-                    {status.includes("pendingAddItem" + item.productId) ? (
-                      <Spinner />
-                    ) : (
-                      <Add />
-                    )}
-                  </IconButton>
+                  {!reviewMode && (
+                    <IconButton
+                      color="error"
+                      onClick={() => onAddItem(item.productId)}
+                    >
+                      {status.includes("pendingAddItem" + item.productId) ? (
+                        <Spinner />
+                      ) : (
+                        <Add />
+                      )}
+                    </IconButton>
+                  )}
                 </Box>
               </TableCell>
               <TableCell align="right">{ccyFormat(item.price)}</TableCell>
@@ -119,16 +125,22 @@ const BasketTable: React.FC<Props> = ({
                 {ccyFormat(sumRow(item.price, item.quantity))}
               </TableCell>
               <TableCell align="center">
-                <IconButton
-                  color="error"
-                  onClick={() =>
-                    onRemoveItem(item.productId, item.quantity, "Delete")
-                  }
-                >
-                  {status.includes(
+                {!reviewMode && (
+                  <IconButton
+                    color="error"
+                    onClick={() =>
+                      onRemoveItem(item.productId, item.quantity, "Delete")
+                    }
+                  >
+                    {status.includes(
                       "pendingRemoveItemDelete" + item.productId
-                    ) ? <Spinner /> : <Delete />}
-                </IconButton>
+                    ) ? (
+                      <Spinner />
+                    ) : (
+                      <Delete />
+                    )}
+                  </IconButton>
+                )}
               </TableCell>
             </TableRow>
           ))}

@@ -35,6 +35,7 @@ const BasketPage = () => {
         items={basket.items}
         onRemoveItem={removeItemHandler}
         onAddItem={addItemHandler}
+        reviewMode={false}
       />
       <Grid container>
         <Grid item xs={6} />
