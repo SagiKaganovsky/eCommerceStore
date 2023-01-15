@@ -90,7 +90,7 @@ namespace StoreAPI.Controllers
 
             if (createOrderDto.SaveAddress)
             {
-                var user = await _storeContext.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+                var user = await _storeContext.Users.Include(a => a.Address).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 user.Address = new UserAddress
                 {
                     FullName = createOrderDto.ShippingAddress.FullName,

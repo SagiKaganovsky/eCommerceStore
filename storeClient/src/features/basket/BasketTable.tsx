@@ -94,7 +94,7 @@ const BasketTable: React.FC<Props> = ({
                   {!reviewMode && (
                     <IconButton
                       color="error"
-                      onClick={() => onRemoveItem(item.productId, 1, "Remove")}
+                      onClick={() => onRemoveItem!(item.productId, 1, "Remove")}
                     >
                       {status.includes(
                         "pendingRemoveItemRemove" + item.productId
@@ -109,7 +109,7 @@ const BasketTable: React.FC<Props> = ({
                   {!reviewMode && (
                     <IconButton
                       color="error"
-                      onClick={() => onAddItem(item.productId)}
+                      onClick={() => onAddItem!(item.productId)}
                     >
                       {status.includes("pendingAddItem" + item.productId) ? (
                         <Spinner />
@@ -129,7 +129,7 @@ const BasketTable: React.FC<Props> = ({
                   <IconButton
                     color="error"
                     onClick={() =>
-                      onRemoveItem(item.productId, item.quantity, "Delete")
+                      onRemoveItem!(item.productId, item.quantity, "Delete")
                     }
                   >
                     {status.includes(

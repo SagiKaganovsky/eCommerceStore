@@ -49,7 +49,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 // Add ConnectionString
-builder.Services.AddDbContext<StoreContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString(DefaultConnectionString)));
+builder.Services.AddDbContext<StoreContext>(options => 
+options.UseSqlite(builder.Configuration.GetConnectionString(DefaultConnectionString)));
 // Add CORS
 builder.Services.AddCors(options =>
 {

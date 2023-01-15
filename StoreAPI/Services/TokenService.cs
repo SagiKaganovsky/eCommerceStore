@@ -36,7 +36,7 @@ namespace StoreAPI.Services
             var key = new SymmetricSecurityKey(signingKey);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
-            var expirationInDays = Convert.ToDouble(_configuration["Jwt:ExpirationInDays"]);
+            var expirationInDays = Convert.ToDouble(_configuration["JWTSettings:ExpirationInDays"]);
             var tokenOptions = new JwtSecurityToken(
                 issuer: null,
                 audience: null,
