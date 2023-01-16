@@ -4,7 +4,7 @@ import AppCheckbox from "../../app/components/inputs/AppCheckbox";
 import AppTextInput from "../../app/components/inputs/AppTextInput";
 
 const AddressForm: React.FC = () => {
-  const { control } = useFormContext();
+  const { control, formState } = useFormContext();
   return (
     <>
       <Typography variant="h6" gutterBottom>
@@ -50,6 +50,7 @@ const AddressForm: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <AppCheckbox
+          disabled={!formState.isDirty}
             name="saveAddress"
             label="Save this as the default address"
             control={control}

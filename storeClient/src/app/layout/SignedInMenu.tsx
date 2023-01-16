@@ -16,7 +16,14 @@ const SignedInMenu: React.FC = () => {
           <Button {...bindTrigger(popupState)}>{user?.email}</Button>
           <Menu {...bindMenu(popupState)}>
             <MenuItem onClick={popupState.close}>Profile</MenuItem>
-            <MenuItem onClick={popupState.close}>My orders</MenuItem>
+            <MenuItem
+              onClick={() => {
+                popupState.close();
+                navigate("/orders");
+              }}
+            >
+              My orders
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 popupState.close();

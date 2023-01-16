@@ -101,7 +101,8 @@ export const accountSlice = createSlice({
     });
     builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
       state.user = action.payload;
-      state.status = "idle";
+      globalNavigate(globalLocation.state?.from);
+      state.status = "fulfilled";
     });
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.user = action.payload;

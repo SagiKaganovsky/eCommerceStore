@@ -12,6 +12,7 @@ import {
 import { Bars } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../app/models/product";
+import { convertToFixed } from "../../app/utils/utils";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addBasketItemAsync } from "../../store/basketSlice";
 
@@ -43,7 +44,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            ${(product.price / 100).toFixed(2)}
+            ${convertToFixed(product.price)}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {product.brand} / {product.type}

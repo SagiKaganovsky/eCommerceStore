@@ -13,6 +13,7 @@ import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import RequireAuth from "./app/auth/RequireAuth";
+import OrderPage from "./features/order/OrderPage";
 
 const About = React.lazy(() => import("./features/about/About"));
 const HomePage = React.lazy(() => import("./features/home/HomePage"));
@@ -71,6 +72,14 @@ const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <CheckoutPage />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/orders",
+        element: (
+          <RequireAuth>
+            <OrderPage />
           </RequireAuth>
         ),
       },

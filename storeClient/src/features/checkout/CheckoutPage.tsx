@@ -7,7 +7,7 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FieldValues,
   FormProvider,
@@ -49,6 +49,16 @@ export default function CheckoutPage() {
     mode: "all",
     resolver: yupResolver(currentValidationSchema),
   });
+
+  const getUserAddress = async () => {
+    const response = await api.Account.getAddress();
+    methods.reset({ ...methods.getValues(), ...response, saveAddress: false });
+  };
+
+  useEffect(() => {
+    getUserAddress();
+  }, [methods]);
+
   const { isValid } = useFormState({
     control: methods.control,
   });
@@ -99,7 +109,7 @@ export default function CheckoutPage() {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is {orderNumber} We have emailed your order
+                Your order number is #{orderNumber} We have emailed your order
                 confirmation, and will send you an update when your order has
                 shipped.
               </Typography>

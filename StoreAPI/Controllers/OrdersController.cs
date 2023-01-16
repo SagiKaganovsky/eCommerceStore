@@ -101,7 +101,6 @@ namespace StoreAPI.Controllers
                     PostalCode = createOrderDto.ShippingAddress.PostalCode,
                     Country = createOrderDto.ShippingAddress.Country,
                 };
-                _storeContext.Update(user);
             }
             var result = await _storeContext.SaveChangesAsync() > 0;
 

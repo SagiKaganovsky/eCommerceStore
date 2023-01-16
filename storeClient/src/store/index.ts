@@ -4,11 +4,13 @@ import { TypedUseSelectorHook, useSelector } from "react-redux/es/exports";
 import { accountReducer } from "./accountSlice";
 import { basketReducer } from "./basketSlice";
 import { catalogReducer } from "./catalogSlice";
+import { orderReducer } from "./orderSlice";
 
 const rootReducer = combineReducers({
   basket: basketReducer,
   catalog: catalogReducer,
-  account: accountReducer
+  account: accountReducer,
+  order: orderReducer
 });
 
 export const store = configureStore({ reducer: rootReducer });

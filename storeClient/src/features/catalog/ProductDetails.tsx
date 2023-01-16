@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { TailSpin } from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
+import { convertToFixed } from "../../app/utils/utils";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addBasketItemAsync } from "../../store/basketSlice";
 import { fetchProductAsync, productSelectors } from "../../store/catalogSlice";
@@ -60,7 +61,7 @@ const ProductDetails: React.FC = () => {
           <Typography variant="h3">{product.name}</Typography>
           <Divider sx={{ mb: 2 }} />
           <Typography variant="h4" color="secondary">
-            ${(product.price / 100).toFixed(2)}
+            ${convertToFixed(product.price)}
           </Typography>
           <TableContainer>
             <Table>
