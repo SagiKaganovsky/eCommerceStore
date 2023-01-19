@@ -10,6 +10,9 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./index.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import { Provider } from "react-redux";
 import { store } from "./store";
 import RequireAuth from "./app/auth/RequireAuth";

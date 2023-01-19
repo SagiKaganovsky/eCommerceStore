@@ -2,8 +2,13 @@ import axios, { AxiosError } from "axios";
 import { store } from "../../store";
 import { PaginatedResponse } from "../models/pagination";
 // axios.defaults.baseURL = "http://restore.local";
-axios.defaults.baseURL = "https://localhost:7116";
+// axios.defaults.baseURL = "https://localhost:7116";
 // axios.defaults.baseURL = "http://localhost:5179";
+axios.defaults.baseURL =
+  import.meta.env.MODE !== "development"
+    ? import.meta.env.BASE_URL
+    : "https://localhost:7116";
+
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use((config) => {
@@ -87,10 +92,10 @@ const Account = {
     const response = await axios.get("account/currentUser");
     return response.data;
   },
-  getAddress:async () => {
+  getAddress: async () => {
     const response = await axios.get("account/savedAddress");
     return response.data;
-  }
+  },
 };
 
 const Orders = {
@@ -112,7 +117,7 @@ const api = {
   Catalog,
   Basket,
   Account,
-  Orders
+  Orders,
 };
 
 export default api;

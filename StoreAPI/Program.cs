@@ -7,7 +7,6 @@ using StoreAPI.Data;
 using StoreAPI.Entities;
 using StoreAPI.Middleware;
 using StoreAPI.Services;
-using System.Text.Json.Serialization;
 
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 var DefaultConnectionString = "DefaultConnection";
@@ -48,9 +47,11 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Add ConnectionString
-builder.Services.AddDbContext<StoreContext>(options => 
-options.UseSqlite(builder.Configuration.GetConnectionString(DefaultConnectionString)));
+builder.Services.AddDbContext<StoreContext>(options =>
+                                            options.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnectionString)));
 // Add CORS
 builder.Services.AddCors(options =>
 {
@@ -114,6 +115,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseCors(AllowSpecificOrigins);
 
 app.UseAuthentication();
@@ -122,5 +126,5 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.MapControllers();
-
+app.MapFallbackToController("Index", "Fallback");
 await app.RunAsync();

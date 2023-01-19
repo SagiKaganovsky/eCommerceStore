@@ -12,7 +12,7 @@ const initialState: OrderState = {
   order: null,
 };
 
-export const getOrders = createAsyncThunk<Order>(
+export const getOrders = createAsyncThunk<Order[]>(
   "order/getOrders",
   async (_, thunkAPI) => {
     try {
