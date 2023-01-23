@@ -125,8 +125,13 @@ const Header: React.FC<Props> = (props) => {
                 {page.title}
               </NavLink>
             ))}
+            <NavLink
+              to={"/inventory"}
+              style={{ color: "white", textDecoration: "none" }}
+            >
+              INVENTORY
+            </NavLink>
           </Box>
-          <Box sx={{ flexGrow: 1 }} />
           <Box>
             <Link to="/basket">
               <IconButton sx={{ color: "inherit" }}>

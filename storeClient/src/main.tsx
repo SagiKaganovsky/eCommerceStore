@@ -31,6 +31,7 @@ const BasketPage = React.lazy(() => import("./features/basket/BasketPage"));
 const CheckoutPage = React.lazy(
   () => import("./features/checkout/CheckoutPage")
 );
+const Inventory = React.lazy(() => import("./features/admin/Inventory"));
 
 const router = createBrowserRouter([
   {
@@ -83,6 +84,14 @@ const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <OrderPage />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/inventory",
+        element: (
+          <RequireAuth>
+            <Inventory />
           </RequireAuth>
         ),
       },

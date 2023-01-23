@@ -1,18 +1,13 @@
 import { Grid, Paper } from "@mui/material";
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
-import {
-  catalogActions,
-  fetchProductsAsync,
-  fetchProductsFiltersAsync,
-  productSelectors,
-} from "../../store/catalogSlice";
+import { catalogActions } from "../../store/catalogSlice";
 import FiltersList from "../../app/components/filters/FiltersList";
 import Sort from "../../app/components/sort/Sort";
 import ProductList from "./ProductList";
 import ProductSearch from "./ProductSearch";
 import CatalogPagination from "../../app/components/pagination/CatalogPagination";
 import { TailSpin } from "react-loader-spinner";
+import useProducts from "../../app/hooks/useProducts";
 
 const sortOptions = [
   {
@@ -30,28 +25,9 @@ const sortOptions = [
 ];
 
 const Catalog: React.FC = () => {
-  const products = useAppSelector(productSelectors.selectAll);
-  const {
-    productsLoaded,
-    filtersLoaded,
-    brands,
-    types,
-    productParams,
-    metaData,
-  } = useAppSelector((state) => state.catalog);
+  const { products, brands, types, metaData } = useProducts();
+  const { productParams } = useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (!productsLoaded) {
-      dispatch(fetchProductsAsync());
-    }
-  }, [productsLoaded, dispatch]);
-
-  useEffect(() => {
-    if (!filtersLoaded) {
-      dispatch(fetchProductsFiltersAsync());
-    }
-  }, [filtersLoaded, dispatch]);
 
   return (
     <Grid container columnSpacing={4}>
