@@ -74,6 +74,16 @@ export const fetchCurrentUser = createAsyncThunk<User>(
   }
 );
 
+const getUserClaims = (action: any) => {
+  let claims = JSON.parse(atob(action.payload.token.split(".")[1]));
+  let roles =
+    claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+  return {
+    ...action.payload,
+    roles: typeof roles === "string" ? [roles] : roles,
+  };
+};
+
 export const accountSlice = createSlice({
   name: "account",
   initialState,
@@ -83,7 +93,7 @@ export const accountSlice = createSlice({
       localStorage.removeItem("user");
     },
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.user = getUserClaims(action);
     },
   },
   extraReducers: (builder) => {
@@ -100,12 +110,12 @@ export const accountSlice = createSlice({
       toast.success("You successfully signed up please Sign in");
     });
     builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.user = getUserClaims(action);
       globalNavigate(globalLocation.state?.from);
       state.status = "fulfilled";
     });
     builder.addCase(signInUser.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.user = getUserClaims(action);
       state.status = "idle";
       if (!globalLocation.state?.from) {
         globalNavigate("/");

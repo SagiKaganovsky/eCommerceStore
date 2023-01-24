@@ -139,7 +139,7 @@ namespace StoreAPI.Controllers
             var result = await _storeContext.SaveChangesAsync() > 0;
             if (result)
             {
-                return Ok();
+                return Ok(result);
             }
 
             return BadRequest(new ProblemDetails { Title = "Problem deleting product" });

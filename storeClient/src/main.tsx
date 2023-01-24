@@ -74,7 +74,7 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: (
-          <RequireAuth>
+          <RequireAuth roles={["Member", "Admin"]}>
             <CheckoutPage />
           </RequireAuth>
         ),
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
       {
         path: "/orders",
         element: (
-          <RequireAuth>
+          <RequireAuth roles={["Member", "Admin"]}>
             <OrderPage />
           </RequireAuth>
         ),
@@ -90,7 +90,7 @@ const router = createBrowserRouter([
       {
         path: "/inventory",
         element: (
-          <RequireAuth>
+          <RequireAuth roles={["Admin"]}>
             <Inventory />
           </RequireAuth>
         ),

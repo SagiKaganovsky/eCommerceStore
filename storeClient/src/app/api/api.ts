@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { store } from "../../store";
 import { PaginatedResponse } from "../models/pagination";
+import { createFormData } from "../utils/utils";
 // axios.defaults.baseURL = "http://restore.local";
 // axios.defaults.baseURL = "https://localhost:7116";
 // axios.defaults.baseURL = "http://localhost:5179";
@@ -113,11 +114,31 @@ const Orders = {
   },
 };
 
+const Admin = {
+  createProduct: async (product: any) => {
+    const response = await axios.post("products", createFormData(product), {
+      headers: { "Content-type": "mulripart/form-data" },
+    });
+    return response.data;
+  },
+  updateProduct: async (product: any) => {
+    const response = await axios.put("products", createFormData(product), {
+      headers: { "Content-type": "mulripart/form-data" },
+    });
+    return response.data;
+  },
+  deleteProduct: async (id: number) => {
+    const response = await axios.delete(`products/${id}`);
+    return response.data;
+  },
+};
+
 const api = {
   Catalog,
   Basket,
   Account,
   Orders,
+  Admin,
 };
 
 export default api;

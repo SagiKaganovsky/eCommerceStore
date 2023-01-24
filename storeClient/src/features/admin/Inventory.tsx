@@ -19,6 +19,8 @@ import { catalogActions } from "../../store/catalogSlice";
 import { useState } from "react";
 import ProductForm from "./ProductForm";
 import { Product } from "../../app/models/product";
+import api from "../../app/api/api";
+import { TailSpin } from "react-loader-spinner";
 
 const Inventory: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +29,8 @@ const Inventory: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(
     undefined
   );
+  const [loading, setLoading] = useState(false);
+  const [target, setTarget] = useState(0);
 
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
@@ -36,6 +40,19 @@ const Inventory: React.FC = () => {
   const handleHideProductForm = () => {
     setShowProductForm(false);
     setSelectedProduct(undefined);
+  };
+
+  const handleDeleteProduct = async (id: number) => {
+    setLoading(true);
+    setTarget(id);
+    try {
+      const response = await api.Admin.deleteProduct(id);
+      if (response) {
+        dispatch(catalogActions.deleteProduct(id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (showProductForm) {
@@ -104,7 +121,26 @@ const Inventory: React.FC = () => {
                     startIcon={<Edit />}
                     onClick={() => handleSelectProduct(product)}
                   />
-                  <Button startIcon={<Delete />} color="error" />
+                  <Button
+                    startIcon={
+                      loading && target === product.id ? (
+                        <TailSpin
+                          height="21"
+                          width="21"
+                          color="red"
+                          ariaLabel="tail-spin-loading"
+                          radius="1"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                          visible={true}
+                        />
+                      ) : (
+                        <Delete />
+                      )
+                    }
+                    color="error"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))}

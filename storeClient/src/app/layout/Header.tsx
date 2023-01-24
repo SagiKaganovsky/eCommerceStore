@@ -125,12 +125,14 @@ const Header: React.FC<Props> = (props) => {
                 {page.title}
               </NavLink>
             ))}
-            <NavLink
-              to={"/inventory"}
-              style={{ color: "white", textDecoration: "none" }}
-            >
-              INVENTORY
-            </NavLink>
+            {user && user.roles?.includes("Admin") && (
+              <NavLink
+                to={"/inventory"}
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                INVENTORY
+              </NavLink>
+            )}
           </Box>
           <Box>
             <Link to="/basket">
